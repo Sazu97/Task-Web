@@ -288,3 +288,19 @@ button {
     min-height: 250px;
     border-radius: 12px;
 }
+
+/* Interacción Drag & Drop */
+.task-card {
+    cursor: grab;
+}
+
+.task-card:active {
+    cursor: grabbing;
+}
+
+/* Indicador visual del hueco al arrastrar */
+.sortable-ghost {
+    opacity: 0.35;
+    border: 2px dashed #4f46e5;
+    background-color: #e2e7ff;
+}
