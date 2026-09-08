@@ -122,10 +122,42 @@ function initDragAndDrop() {
     columns.forEach(column => {
         if (!column) return;
 
-        new Sortable(column, {
-            group: 'kanban-board', // Permite mover tarjetas entre distintas columnas
-            animation: 150,        // Suavizado visual en milisegundos
-            ghostClass: 'sortable-ghost' // Clase CSS de sombra/hueco
+new Sortable(column, {
+            group: 'kanban-board',
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: async (evt) => {
+                // Solo guardamos si la tarjeta ha cambiado de columna
+                if (evt.from !== evt.to) {
+                    const taskId = evt.item.dataset.id;
+                    const newStatus = evt.to.dataset.status;
+
+                    // Actualizar contadores inmediatamente en la interfaz
+                    updateCounters();
+
+                    // Persistir el cambio en json-server
+                    await updateTaskStatus(taskId, newStatus);
+                }
+            }
         });
     });
+}
+
+// Envía la petición PATCH con el nuevo estado de la tarea
+async function updateTaskStatus(id, newStatus) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al actualizar el estado de la tarea');
+        }
+    } catch (error) {
+        console.error('Error en PATCH:', error);
+    }
 }
