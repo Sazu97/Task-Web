@@ -20,7 +20,7 @@
       "id": "2",
       "title": "Maquetar vista responsive",
       "description": "Ajustar diseño de rejilla y selector de columnas para resoluciones móviles.",
-      "status": "doing",
+      "status": "todo",
       "priority": "Media",
       "dueDate": "2026-09-18",
       "comments": [
@@ -40,6 +40,15 @@
       "priority": "Baja",
       "dueDate": "2026-09-10",
       "comments": []
+    },
+    {
+      "title": "Limpiar CSS",
+      "description": "Borrar CSS antiguo.",
+      "status": "todo",
+      "priority": "Media",
+      "dueDate": "2027-12-08",
+      "comments": [],
+      "id": "-pjR4JKsYhE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

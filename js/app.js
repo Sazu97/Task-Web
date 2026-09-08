@@ -24,6 +24,7 @@ async function initApp() {
         const tasks = await response.json();
         renderAllTasks(tasks);
         initDragAndDrop();
+        initCreateModal();
     } catch (error) {
         console.error('Error al cargar las tareas:', error);
     }
@@ -42,6 +43,10 @@ function renderAllTasks(tasks) {
 
     updateCounters();
 }
+
+// ==========================================================================
+// TARJETAS DE TAREAS
+// ==========================================================================
 
 // Crea la estructura HTML de cada tarjeta
 function createTaskCard(task) {
@@ -122,7 +127,7 @@ function initDragAndDrop() {
     columns.forEach(column => {
         if (!column) return;
 
-new Sortable(column, {
+        new Sortable(column, {
             group: 'kanban-board',
             animation: 150,
             ghostClass: 'sortable-ghost',
@@ -159,5 +164,72 @@ async function updateTaskStatus(id, newStatus) {
         }
     } catch (error) {
         console.error('Error en PATCH:', error);
+    }
+}
+
+// ==========================================================================
+// CREACIÓN DE TAREAS (MODAL Y POST)
+// ==========================================================================
+function initCreateModal() {
+    const modal = document.getElementById('create-modal');
+    const btnOpen = document.getElementById('btn-open-create-modal');
+    const btnClose = document.getElementById('btn-close-create-modal');
+    const btnCancel = document.getElementById('btn-cancel-create');
+    const form = document.getElementById('create-task-form');
+
+    if (!modal || !btnOpen || !form) return;
+
+    // Abrir modal nativo
+    btnOpen.addEventListener('click', () => {
+        form.reset();
+        modal.showModal();
+    });
+
+    // Cerrar modal
+    const closeModal = () => modal.close();
+    if (btnClose) btnClose.addEventListener('click', closeModal);
+    if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+    // Enviar formulario (POST)
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const newTask = {
+            title: formData.get('title').trim(),
+            description: formData.get('description').trim(),
+            status: formData.get('status'),
+            priority: formData.get('priority'),
+            dueDate: formData.get('dueDate') || '',
+            comments: []
+        };
+
+        await createTask(newTask, modal, form);
+    });
+}
+
+async function createTask(taskData, modal, form) {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(taskData)
+        });
+
+        if (!response.ok) throw new Error('Error al guardar la nueva tarea');
+
+        const createdTask = await response.json();
+
+        // Insertar en la columna correspondiente
+        const targetColumn = dropzones[createdTask.status];
+        if (targetColumn) {
+            targetColumn.appendChild(createTaskCard(createdTask));
+        }
+
+        updateCounters();
+        modal.close();
+        form.reset();
+    } catch (error) {
+        console.error('Error en POST:', error);
     }
 }
