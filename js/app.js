@@ -22,7 +22,8 @@ async function initApp() {
         const response = await fetch(API_URL);
         if (!response.ok) throw new Error('Error al conectar con la API');
         const tasks = await response.json();
-        renderAllTasks(tasks); 
+        renderAllTasks(tasks);
+        initDragAndDrop();
     } catch (error) {
         console.error('Error al cargar las tareas:', error);
     }
@@ -38,6 +39,8 @@ function renderAllTasks(tasks) {
             dropzones[task.status].appendChild(cardElement);
         }
     });
+
+    updateCounters();
 }
 
 // Crea la estructura HTML de cada tarjeta
@@ -72,4 +75,57 @@ function createTaskCard(task) {
     `;
 
     return card;
+}
+
+// ==========================================================================
+// CÁLCULO DE CONTADORES
+// ==========================================================================
+function updateCounters() {
+    const todoCount = document.querySelectorAll('#tasks-todo .task-card').length;
+    const doingCount = document.querySelectorAll('#tasks-doing .task-card').length;
+    const doneCount = document.querySelectorAll('#tasks-done .task-card').length;
+
+    // Contadores de cada columna
+    const countTodo = document.getElementById('counter-todo');
+    const countDoing = document.getElementById('counter-doing');
+    const countDone = document.getElementById('counter-done');
+
+    if (countTodo) countTodo.textContent = todoCount;
+    if (countDoing) countDoing.textContent = doingCount;
+    if (countDone) countDone.textContent = doneCount;
+
+    // Contadores de la barra superior (Escritorio)
+    const statTodo = document.getElementById('stat-todo');
+    const statDoing = document.getElementById('stat-doing');
+    const statDone = document.getElementById('stat-done');
+
+    if (statTodo) statTodo.textContent = todoCount;
+    if (statDoing) statDoing.textContent = doingCount;
+    if (statDone) statDone.textContent = doneCount;
+
+    // Contadores de la barra superior (Móvil)
+    const statTodoMob = document.getElementById('stat-todo-mobile');
+    const statDoingMob = document.getElementById('stat-doing-mobile');
+    const statDoneMob = document.getElementById('stat-done-mobile');
+
+    if (statTodoMob) statTodoMob.textContent = todoCount;
+    if (statDoingMob) statDoingMob.textContent = doingCount;
+    if (statDoneMob) statDoneMob.textContent = doneCount;
+}
+
+// ==========================================================================
+// DRAG & DROP (SORTABLEJS)
+// ==========================================================================
+function initDragAndDrop() {
+    const columns = [dropzones.todo, dropzones.doing, dropzones.done];
+
+    columns.forEach(column => {
+        if (!column) return;
+
+        new Sortable(column, {
+            group: 'kanban-board', // Permite mover tarjetas entre distintas columnas
+            animation: 150,        // Suavizado visual en milisegundos
+            ghostClass: 'sortable-ghost' // Clase CSS de sombra/hueco
+        });
+    });
 }
