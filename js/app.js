@@ -23,6 +23,7 @@ async function initApp() {
         if (!response.ok) throw new Error('Error al conectar con la API');
         const tasks = await response.json();
         renderAllTasks(tasks);
+        initDragAndDrop();
     } catch (error) {
         console.error('Error al cargar las tareas:', error);
     }
@@ -38,7 +39,7 @@ function renderAllTasks(tasks) {
             dropzones[task.status].appendChild(cardElement);
         }
     });
-    
+
     updateCounters();
 }
 
@@ -110,4 +111,21 @@ function updateCounters() {
     if (statTodoMob) statTodoMob.textContent = todoCount;
     if (statDoingMob) statDoingMob.textContent = doingCount;
     if (statDoneMob) statDoneMob.textContent = doneCount;
+}
+
+// ==========================================================================
+// DRAG & DROP (SORTABLEJS)
+// ==========================================================================
+function initDragAndDrop() {
+    const columns = [dropzones.todo, dropzones.doing, dropzones.done];
+
+    columns.forEach(column => {
+        if (!column) return;
+
+        new Sortable(column, {
+            group: 'kanban-board', // Permite mover tarjetas entre distintas columnas
+            animation: 150,        // Suavizado visual en milisegundos
+            ghostClass: 'sortable-ghost' // Clase CSS de sombra/hueco
+        });
+    });
 }
