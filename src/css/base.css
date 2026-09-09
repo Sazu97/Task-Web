@@ -208,3 +208,17 @@ button {
 .mobile-only {
     display: none;
 }
+
+/* ==========================================================================
+    RESPONSIVE BASE (< 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .mobile-only {
+        display: flex !important;
+    }
+
+    .search-box,
+    .quick-stats {
+        display: none;
+    }
+}

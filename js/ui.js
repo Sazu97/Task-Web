@@ -189,3 +189,57 @@ export function initSearch() {
         });
     }
 }
+
+// ==========================================================================
+// INTERACCIÓN MÓVIL (MENÚ HAMBURGUESA Y PESTAÑAS)
+// ==========================================================================
+export function initMobileInteractions() {
+    const btnMenu = document.getElementById('btn-mobile-menu');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const tabs = document.querySelectorAll('#mobile-column-tabs .tab-button');
+    const columns = document.querySelectorAll('.kanban-column');
+
+    // Desplegar / ocultar menú hamburguesa
+    if (btnMenu && mobileMenu) {
+        btnMenu.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    // Alternar columnas visibles según la pestaña activa
+    function applyMobileTab(selectedStatus) {
+        columns.forEach(col => {
+            const colStatus = col.dataset.column;
+            if (colStatus === selectedStatus) {
+                col.classList.remove('mobile-hidden');
+            } else {
+                col.classList.add('mobile-hidden');
+            }
+        });
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const targetTab = tab.dataset.tab;
+            applyMobileTab(targetTab);
+        });
+    });
+
+    // Activar la primera pestaña por defecto si la pantalla inicia en tamaño móvil
+    if (window.innerWidth <= 768) {
+        applyMobileTab('todo');
+    }
+
+    // Gestionar el redimensionamiento de ventana
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            columns.forEach(col => col.classList.remove('mobile-hidden'));
+        } else {
+            const activeTab = document.querySelector('#mobile-column-tabs .tab-button.active');
+            applyMobileTab(activeTab ? activeTab.dataset.tab : 'todo');
+        }
+    });
+}
