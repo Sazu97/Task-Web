@@ -46,3 +46,23 @@ export async function apiDeleteTask(id) {
     if (!response.ok) throw new Error('No se pudo eliminar la tarea en el servidor');
     return await response.json();
 }
+
+
+// USERS API
+const USERS_URL = 'http://localhost:3000/users';
+
+export async function getUsers() {
+    const response = await fetch(USERS_URL);
+    if (!response.ok) throw new Error('Error al obtener usuarios');
+    return await response.json();
+}
+
+export async function apiCreateUser(userData) {
+    const response = await fetch(USERS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+    });
+    if (!response.ok) throw new Error('Error al registrar el usuario');
+    return await response.json();
+}

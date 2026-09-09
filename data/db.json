@@ -1,12 +1,25 @@
 {
+  "users": [
+    {
+      "id": "1",
+      "name": "Sara",
+      "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=Sara"
+    },
+    {
+      "id": "2",
+      "name": "Dani",
+      "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=Dani"
+    }
+  ],
   "tasks": [
     {
       "id": "1",
       "title": "Diseñar arquitectura del proyecto",
       "description": "Definir la estructura modular de directorios y el contrato de datos JSON.",
-      "status": "done",
+      "status": "todo",
       "priority": "Alta",
       "dueDate": "2026-09-15",
+      "assigneeId": "2",
       "comments": [
         {
           "id": "c-1",
@@ -25,9 +38,10 @@
       "id": "2",
       "title": "Maquetar vista responsive",
       "description": "Ajustar diseño de rejilla y selector de columnas para resoluciones móviles.",
-      "status": "doing",
+      "status": "done",
       "priority": "Media",
       "dueDate": "2026-09-18",
+      "assigneeId": "1",
       "comments": [
         {
           "id": "c-2",
@@ -41,9 +55,10 @@
       "id": "3",
       "title": "Configurar repositorio Git",
       "description": "Crear ramas main y dev y crear la configuración de .gitignore.",
-      "status": "todo",
+      "status": "doing",
       "priority": "Baja",
       "dueDate": "2026-09-10",
+      "assigneeId": "",
       "comments": []
     }
   ],

@@ -1,5 +1,13 @@
-import { apiCreateTask, apiUpdateTask } from './api.js';
-import { dropzones, createTaskCard, updateCounters, renderTaskComments } from './ui.js';
+import { apiCreateTask, apiUpdateTask, apiCreateUser } from './api.js';
+import { 
+    dropzones, 
+    createTaskCard, 
+    updateCounters, 
+    renderTaskComments, 
+    getAppUsers, 
+    setAppUsers, 
+    populateUserDropdowns 
+} from './ui.js';
 
 let currentTask = null;
 
@@ -8,6 +16,52 @@ const statusLabels = {
     doing: 'En Proceso',
     done: 'Finalizado'
 };
+
+// ==========================================================================
+// REGISTRO DE USUARIOS (MODAL Y POST /users)
+// ==========================================================================
+export function initUserModal() {
+    const modal = document.getElementById('user-modal');
+    const btnOpen = document.getElementById('btn-open-user-modal');
+    const btnClose = document.getElementById('btn-close-user-modal');
+    const btnCancel = document.getElementById('btn-cancel-user');
+    const form = document.getElementById('create-user-form');
+
+    if (!modal || !btnOpen || !form) return;
+
+    btnOpen.addEventListener('click', () => {
+        form.reset();
+        modal.showModal();
+    });
+
+    const closeModal = () => modal.close();
+    if (btnClose) btnClose.addEventListener('click', closeModal);
+    if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const name = formData.get('name').trim();
+        const customAvatar = formData.get('avatar').trim();
+
+        // Si no se aporta imagen, se crea un avatar automático
+        const avatarUrl = customAvatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`;
+
+        try {
+            const newUser = await apiCreateUser({ name, avatar: avatarUrl });
+            const currentUsers = getAppUsers();
+            currentUsers.push(newUser);
+            setAppUsers(currentUsers);
+            populateUserDropdowns(currentUsers);
+
+            modal.close();
+            form.reset();
+        } catch (error) {
+            console.error('Error al registrar usuario:', error);
+        }
+    });
+}
 
 // ==========================================================================
 // CREACIÓN DE TAREAS (MODAL Y POST)
@@ -40,6 +94,7 @@ export function initCreateModal() {
             status: formData.get('status'),
             priority: formData.get('priority'),
             dueDate: formData.get('dueDate') || '',
+            assigneeId: formData.get('assigneeId') || '',
             comments: []
         };
 
@@ -73,16 +128,9 @@ export function openEditModal(task) {
 
     currentTask = task;
 
-    // Rellenar datos en la vista de detalle (solo lectura)
     populateDetailView(task);
-
-    // Rellenar los campos del formulario de edición
     populateEditForm(task);
-
-    // Renderizar comentarios
     renderTaskComments(task.comments || []);
-
-    // Asegurar que siempre se abra en modo lectura
     showDetailView();
 
     modal.showModal();
@@ -94,10 +142,11 @@ function populateDetailView(task) {
     const detailPriority = document.getElementById('detail-priority');
     const detailStatus = document.getElementById('detail-status');
     const detailDate = document.getElementById('detail-due-date');
+    const assigneeWrap = document.getElementById('detail-assignee-wrap');
 
     if (detailTitle) detailTitle.textContent = task.title;
     if (detailDesc) detailDesc.textContent = task.description || 'Sin descripción añadida.';
-    
+
     if (detailPriority) {
         detailPriority.textContent = task.priority;
         detailPriority.className = `badge badge-${task.priority.toLowerCase()}`;
@@ -110,6 +159,23 @@ function populateDetailView(task) {
     if (detailDate) {
         detailDate.textContent = task.dueDate || 'Sin fecha límite';
     }
+
+    // Mostrar el responsable en la vista de detalle
+    if (assigneeWrap) {
+        const users = getAppUsers();
+        const assignedUser = users.find(u => String(u.id) === String(task.assigneeId));
+
+        if (assignedUser) {
+            assigneeWrap.innerHTML = `
+                <div class="detail-assignee-box">
+                    <img src="${assignedUser.avatar}" alt="${assignedUser.name}" class="avatar-md" />
+                    <span class="assignee-name">${assignedUser.name}</span>
+                </div>
+            `;
+        } else {
+            assigneeWrap.innerHTML = '<span class="detail-text" style="padding: 0.35rem 0.6rem;">Sin asignar</span>';
+        }
+    }
 }
 
 function populateEditForm(task) {
@@ -119,6 +185,11 @@ function populateEditForm(task) {
     document.getElementById('edit-status').value = task.status;
     document.getElementById('edit-priority').value = task.priority;
     document.getElementById('edit-due-date').value = task.dueDate || '';
+    
+    const editAssignee = document.getElementById('edit-assignee');
+    if (editAssignee) {
+        editAssignee.value = task.assigneeId || '';
+    }
 }
 
 function showDetailView() {
@@ -146,7 +217,7 @@ function showEditForm() {
     if (editForm) editForm.classList.remove('hidden');
     if (modalTitle) modalTitle.textContent = 'Editar Tarea';
     if (btnToggle) {
-        btnToggle.style.display = 'none'; // Ocultar lápiz mientras se está editando
+        btnToggle.style.display = 'none';
     }
 }
 
@@ -163,14 +234,12 @@ export function initEditModal() {
     const closeModal = () => modal.close();
     if (btnClose) btnClose.addEventListener('click', closeModal);
 
-    // Botón lápiz: conmuta a vista de formulario
     if (btnToggleEdit) {
         btnToggleEdit.addEventListener('click', () => {
             showEditForm();
         });
     }
 
-    // Botón cancelar del formulario: vuelve a la vista de detalle sin cerrar el modal
     if (btnCancel) {
         btnCancel.addEventListener('click', () => {
             if (currentTask) populateEditForm(currentTask);
@@ -178,7 +247,6 @@ export function initEditModal() {
         });
     }
 
-    // Guardar cambios editados (PATCH)
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -191,14 +259,14 @@ export function initEditModal() {
                 description: formData.get('description').trim(),
                 status: formData.get('status'),
                 priority: formData.get('priority'),
-                dueDate: formData.get('dueDate') || ''
+                dueDate: formData.get('dueDate') || '',
+                assigneeId: formData.get('assigneeId') || ''
             };
 
             await updateTaskData(taskId, updatedFields);
         });
     }
 
-    // Publicar comentario
     if (commentForm) {
         commentForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -222,7 +290,6 @@ export function initEditModal() {
                 renderTaskComments(currentTask.comments);
                 textInput.value = '';
 
-                // Actualizar contador en la tarjeta del tablero
                 const oldCard = document.querySelector(`.task-card[data-id="${updatedTask.id}"]`);
                 if (oldCard) {
                     const newCard = createTaskCard(updatedTask);
@@ -240,11 +307,9 @@ async function updateTaskData(id, updatedFields) {
         const updatedTask = await apiUpdateTask(id, updatedFields);
         currentTask = updatedTask;
 
-        // Actualizar la vista de detalle con los nuevos datos y volver a ella
         populateDetailView(updatedTask);
         showDetailView();
 
-        // Reemplazar la tarjeta en el tablero
         const oldCard = document.querySelector(`.task-card[data-id="${id}"]`);
         if (oldCard) oldCard.remove();
 

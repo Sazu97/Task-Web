@@ -2,6 +2,30 @@ import { apiDeleteTask } from './api.js';
 import { openEditModal } from './modals.js';
 
 // ==========================================================================
+// ESTADO LOCAL DE USUARIOS Y SELECTORES DESPLEGABLES
+// ==========================================================================
+let appUsers = [];
+
+export function setAppUsers(users) {
+    appUsers = users;
+}
+
+export function getAppUsers() {
+    return appUsers;
+}
+
+export function populateUserDropdowns(users) {
+    const createSelect = document.getElementById('create-assignee');
+    const editSelect = document.getElementById('edit-assignee');
+
+    const optionsHtml = '<option value="">Sin asignar</option>' + 
+        users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+
+    if (createSelect) createSelect.innerHTML = optionsHtml;
+    if (editSelect) editSelect.innerHTML = optionsHtml;
+}
+
+// ==========================================================================
 // CONFIGURACIÓN Y SELECTORES BASE
 // ==========================================================================
 export const dropzones = {
@@ -18,7 +42,6 @@ export function updateCounters() {
     const doingCount = document.querySelectorAll('#tasks-doing .task-card').length;
     const doneCount = document.querySelectorAll('#tasks-done .task-card').length;
 
-    // Contadores de cada columna
     const countTodo = document.getElementById('counter-todo');
     const countDoing = document.getElementById('counter-doing');
     const countDone = document.getElementById('counter-done');
@@ -27,7 +50,6 @@ export function updateCounters() {
     if (countDoing) countDoing.textContent = doingCount;
     if (countDone) countDone.textContent = doneCount;
 
-    // Contadores de la barra superior (Escritorio)
     const statTodo = document.getElementById('stat-todo');
     const statDoing = document.getElementById('stat-doing');
     const statDone = document.getElementById('stat-done');
@@ -36,7 +58,6 @@ export function updateCounters() {
     if (statDoing) statDoing.textContent = doingCount;
     if (statDone) statDone.textContent = doneCount;
 
-    // Contadores de la barra superior (Móvil)
     const statTodoMob = document.getElementById('stat-todo-mobile');
     const statDoingMob = document.getElementById('stat-doing-mobile');
     const statDoneMob = document.getElementById('stat-done-mobile');
@@ -49,8 +70,6 @@ export function updateCounters() {
 // ==========================================================================
 // TARJETAS DE TAREAS
 // ==========================================================================
-
-// Vacía dropzones y distribuye las tarjetas según su estado
 export function renderAllTasks(tasks) {
     Object.values(dropzones).forEach(zone => {
         if (zone) zone.innerHTML = '';
@@ -66,7 +85,6 @@ export function renderAllTasks(tasks) {
     updateCounters();
 }
 
-// Crea la estructura HTML de cada tarjeta
 export function createTaskCard(task) {
     const card = document.createElement('article');
     card.className = 'task-card';
@@ -76,28 +94,38 @@ export function createTaskCard(task) {
     const commentsCount = task.comments ? task.comments.length : 0;
     const formattedDate = task.dueDate || 'Sin fecha';
 
+    // Buscar si la tarea tiene responsable asignado para pintar su avatar
+    const assignedUser = appUsers.find(u => String(u.id) === String(task.assigneeId));
+    const userAvatarHtml = assignedUser
+        ? `<div class="card-assignee" title="Asignado a: ${assignedUser.name}">
+             <img src="${assignedUser.avatar}" alt="${assignedUser.name}" class="avatar-sm" />
+           </div>`
+        : '';
+
     card.innerHTML = `
     <div class="card-top">
         <span class="badge ${priorityClass}">${task.priority}</span>
-        <button type="button" class="card-delete-btn" title="Eliminar tarea" aria-label="Eliminar tarea">
-        <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
-        </button>
+        <div style="display: flex; align-items: center; gap: 0.4rem;">
+            ${userAvatarHtml}
+            <button type="button" class="card-delete-btn" title="Eliminar tarea" aria-label="Eliminar tarea">
+                <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+            </button>
+        </div>
     </div>
     <h3 class="card-title">${task.title}</h3>
     <p class="card-desc">${task.description || 'Sin descripción.'}</p>
     <div class="card-footer">
         <div class="card-meta-item">
-        <span class="material-symbols-outlined">calendar_today</span>
-        <span>${formattedDate}</span>
+            <span class="material-symbols-outlined">calendar_today</span>
+            <span>${formattedDate}</span>
         </div>
         <div class="card-meta-item">
-        <span class="material-symbols-outlined">chat_bubble</span>
-        <span>${commentsCount}</span>
+            <span class="material-symbols-outlined">chat_bubble</span>
+            <span>${commentsCount}</span>
         </div>
     </div>
     `;
 
-    // Escuchar el clic para borrar la tarea
     const deleteBtn = card.querySelector('.card-delete-btn');
     if (deleteBtn) {
         deleteBtn.addEventListener('click', async (e) => {
@@ -109,7 +137,6 @@ export function createTaskCard(task) {
         });
     }
 
-    // Escuchar el clic sobre la tarjeta para abrir edición
     card.addEventListener('click', () => {
         openEditModal(task);
     });
@@ -142,9 +169,6 @@ export function renderTaskComments(comments) {
     });
 }
 
-// ==========================================================================
-// ELIMINACIÓN DE TAREAS (DELETE)
-// ==========================================================================
 async function deleteTask(id, cardElement) {
     try {
         await apiDeleteTask(id);
@@ -168,12 +192,10 @@ export function initSearch() {
 
         cards.forEach(card => {
             const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
-            // Si el título incluye el texto escrito, se muestra; si no, se oculta
             card.style.display = title.includes(term) ? '' : 'none';
         });
     }
 
-    // Escuchar cambios en la barra de escritorio y sincronizar con móvil
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             if (searchInputMobile) searchInputMobile.value = e.target.value;
@@ -181,7 +203,6 @@ export function initSearch() {
         });
     }
 
-    // Escuchar cambios en la barra de móvil y sincronizar con escritorio
     if (searchInputMobile) {
         searchInputMobile.addEventListener('input', (e) => {
             if (searchInput) searchInput.value = e.target.value;
@@ -199,14 +220,12 @@ export function initMobileInteractions() {
     const tabs = document.querySelectorAll('#mobile-column-tabs .tab-button');
     const columns = document.querySelectorAll('.kanban-column');
 
-    // Desplegar / ocultar menú hamburguesa
     if (btnMenu && mobileMenu) {
         btnMenu.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
     }
 
-    // Alternar columnas visibles según la pestaña activa
     function applyMobileTab(selectedStatus) {
         columns.forEach(col => {
             const colStatus = col.dataset.column;
@@ -228,12 +247,10 @@ export function initMobileInteractions() {
         });
     });
 
-    // Activar la primera pestaña por defecto si la pantalla inicia en tamaño móvil
     if (window.innerWidth <= 768) {
         applyMobileTab('todo');
     }
 
-    // Gestionar el redimensionamiento de ventana
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768) {
             columns.forEach(col => col.classList.remove('mobile-hidden'));
