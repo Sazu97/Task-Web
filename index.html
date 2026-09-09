@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 
 <head>
@@ -7,8 +7,8 @@
     <title>TaskBoard - Tablero Kanban</title>
 
     <!-- Fuentes e Iconos -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
         rel="stylesheet" />
@@ -21,15 +21,13 @@
     <!-- Librería SortableJS -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <!-- Script principal de la aplicación -->
-<script src="js/app.js" defer></script>
+    <script src="js/app.js" defer></script>
 </head>
 
 <body>
-
     <!-- Cabecera y Navegación Principal -->
     <header class="app-header">
         <div class="header-container">
-
             <div class="brand-group">
                 <div class="brand-logo">
                     <span class="material-symbols-outlined">view_kanban</span>
@@ -78,25 +76,31 @@
 
     <!-- Contenedor Principal de la App -->
     <main class="board-main">
-
         <!-- Encabezado de la vista -->
         <section class="board-title-area">
             <div>
                 <h1 class="board-title">Tablero Principal</h1>
-                <p class="board-subtitle">Gestión visual y ágil de tareas pendientes, en curso y finalizadas.</p>
+                <p class="board-subtitle">
+                    Gestión visual y ágil de tareas pendientes, en curso y finalizadas.
+                </p>
             </div>
         </section>
 
         <!-- Selector de pestañas para vista móvil (< 768px) -->
         <nav class="mobile-tabs mobile-only" id="mobile-column-tabs">
-            <button type="button" data-tab="todo" class="tab-button active">Por Hacer</button>
-            <button type="button" data-tab="doing" class="tab-button">En Proceso</button>
-            <button type="button" data-tab="done" class="tab-button">Finalizado</button>
+            <button type="button" data-tab="todo" class="tab-button active">
+                Por Hacer
+            </button>
+            <button type="button" data-tab="doing" class="tab-button">
+                En Proceso
+            </button>
+            <button type="button" data-tab="done" class="tab-button">
+                Finalizado
+            </button>
         </nav>
 
         <!-- Tablero Kanban de 3 columnas fijas -->
         <div class="kanban-grid" id="kanban-board">
-
             <!-- Columna 1: Por Hacer -->
             <section class="kanban-column" data-column="todo">
                 <header class="column-header">
@@ -137,5 +141,63 @@
             </section>
         </div>
     </main>
+
+    <!-- Modal nativo para Crear Nueva Tarea -->
+    <dialog id="create-modal" class="dialog-modal">
+        <div class="dialog-content modal-sm">
+            <header class="modal-header">
+                <h2 class="modal-title">Nueva Tarea</h2>
+                <button type="button" id="btn-close-create-modal" class="btn-icon" aria-label="Cerrar modal">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </header>
+
+            <form id="create-task-form" class="modal-form">
+                <div class="form-group">
+                    <label for="create-title" class="form-label">Título *</label>
+                    <input id="create-title" name="title" type="text" class="form-control"
+                        placeholder="Ej: Implementar pasarela de pago" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="create-description" class="form-label">Descripción</label>
+                    <textarea id="create-description" name="description" class="form-control textarea" rows="3"
+                        placeholder="Detalles sobre lo que se necesita realizar..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="create-status" class="form-label">Columna / Estado</label>
+                        <select id="create-status" name="status" class="form-control">
+                            <option value="todo">Por Hacer</option>
+                            <option value="doing">En Proceso</option>
+                            <option value="done">Finalizado</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="create-priority" class="form-label">Prioridad</label>
+                        <select id="create-priority" name="priority" class="form-control">
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Baja">Baja</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="create-due-date" class="form-label">Fecha límite</label>
+                    <input id="create-due-date" name="dueDate" type="date" class="form-control" />
+                </div>
+
+                <footer class="modal-footer">
+                    <button type="button" id="btn-cancel-create" class="btn btn-secondary">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">Guardar Tarea</button>
+                </footer>
+            </form>
+        </div>
+    </dialog>
 </body>
 </html>

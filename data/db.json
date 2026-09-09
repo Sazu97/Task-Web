@@ -1,45 +1,46 @@
 {
-    "tasks": [
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Diseñar arquitectura del proyecto",
+      "description": "Definir la estructura modular de directorios y el contrato de datos JSON.",
+      "status": "todo",
+      "priority": "Alta",
+      "dueDate": "2026-09-15",
+      "comments": [
         {
-            "id": "1",
-            "title": "Diseñar arquitectura del proyecto",
-            "description": "Definir la estructura modular de directorios y el contrato de datos JSON.",
-            "status": "todo",
-            "priority": "Alta",
-            "dueDate": "2026-09-15",
-            "comments": [
-                {
-                    "id": "c-1",
-                    "author": "Dani",
-                    "text": "Comprobar compatibilidad de rutas relativas.",
-                    "date": "08 sep"
-                }
-            ]
-        },
-        {
-            "id": "2",
-            "title": "Maquetar vista responsive",
-            "description": "Ajustar diseño de rejilla y selector de columnas para resoluciones móviles.",
-            "status": "doing",
-            "priority": "Media",
-            "dueDate": "2026-09-18",
-            "comments": [
-                {
-                    "id": "c-2",
-                    "author": "Sara",
-                    "text": "Falta revisar el comportamiento de las pestañas en pantallas inferiores a 768px.",
-                    "date": "08 sep"
-                }
-            ]
-        },
-        {
-            "id": "3",
-            "title": "Configurar repositorio Git",
-            "description": "Crear ramas main y dev, junto con la configuración de .gitignore.",
-            "status": "done",
-            "priority": "Baja",
-            "dueDate": "2026-09-10",
-            "comments": []
+          "id": "c-1",
+          "author": "Dani",
+          "text": "Comprobar compatibilidad de rutas relativas.",
+          "date": "08 sep"
         }
-    ]
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Maquetar vista responsive",
+      "description": "Ajustar diseño de rejilla y selector de columnas para resoluciones móviles.",
+      "status": "done",
+      "priority": "Media",
+      "dueDate": "2026-09-18",
+      "comments": [
+        {
+          "id": "c-2",
+          "author": "Sara",
+          "text": "Falta revisar el comportamiento de las pestañas en pantallas inferiores a 768px.",
+          "date": "08 sep"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Configurar repositorio Git",
+      "description": "Crear ramas main y dev, junto con la configuración de .gitignore.",
+      "status": "doing",
+      "priority": "Baja",
+      "dueDate": "2026-09-10",
+      "comments": []
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

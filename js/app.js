@@ -24,6 +24,7 @@ async function initApp() {
         const tasks = await response.json();
         renderAllTasks(tasks);
         initDragAndDrop();
+        initCreateModal();
     } catch (error) {
         console.error('Error al cargar las tareas:', error);
     }
@@ -31,7 +32,9 @@ async function initApp() {
 
 // Vacía dropzones y distribuye las tarjetas según su estado
 function renderAllTasks(tasks) {
-    Object.values(dropzones).forEach(zone => (zone.innerHTML = ''));
+    Object.values(dropzones).forEach(zone => {
+        if (zone) zone.innerHTML = '';
+    });
 
     tasks.forEach(task => {
         const cardElement = createTaskCard(task);
@@ -42,6 +45,10 @@ function renderAllTasks(tasks) {
 
     updateCounters();
 }
+
+// ==========================================================================
+// TARJETAS DE TAREAS
+// ==========================================================================
 
 // Crea la estructura HTML de cada tarjeta
 function createTaskCard(task) {
@@ -73,6 +80,18 @@ function createTaskCard(task) {
         </div>
     </div>
     `;
+
+    // Escuchar el clic para borrar la tarea
+    const deleteBtn = card.querySelector('.card-delete-btn');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const confirmDelete = confirm(`¿Quieres eliminar la tarea "${task.title}"?`);
+            if (confirmDelete) {
+                await deleteTask(task.id, card);
+            }
+        });
+    }
 
     return card;
 }
@@ -123,9 +142,129 @@ function initDragAndDrop() {
         if (!column) return;
 
         new Sortable(column, {
-            group: 'kanban-board', // Permite mover tarjetas entre distintas columnas
-            animation: 150,        // Suavizado visual en milisegundos
-            ghostClass: 'sortable-ghost' // Clase CSS de sombra/hueco
+            group: 'kanban-board',
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: async (evt) => {
+                // Solo guardamos si la tarjeta ha cambiado de columna
+                if (evt.from !== evt.to) {
+                    const taskId = evt.item.dataset.id;
+                    const newStatus = evt.to.dataset.status;
+
+                    // Actualizar contadores inmediatamente en la interfaz
+                    updateCounters();
+
+                    // Persistir el cambio en json-server
+                    await updateTaskStatus(taskId, newStatus);
+                }
+            }
         });
     });
+}
+
+// Envía la petición PATCH con el nuevo estado de la tarea
+async function updateTaskStatus(id, newStatus) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al actualizar el estado de la tarea');
+        }
+    } catch (error) {
+        console.error('Error en PATCH:', error);
+    }
+}
+
+// ==========================================================================
+// CREACIÓN DE TAREAS (MODAL Y POST)
+// ==========================================================================
+function initCreateModal() {
+    const modal = document.getElementById('create-modal');
+    const btnOpen = document.getElementById('btn-open-create-modal');
+    const btnClose = document.getElementById('btn-close-create-modal');
+    const btnCancel = document.getElementById('btn-cancel-create');
+    const form = document.getElementById('create-task-form');
+
+    if (!modal || !btnOpen || !form) return;
+
+    // Abrir modal nativo
+    btnOpen.addEventListener('click', () => {
+        form.reset();
+        modal.showModal();
+    });
+
+    // Cerrar modal
+    const closeModal = () => modal.close();
+    if (btnClose) btnClose.addEventListener('click', closeModal);
+    if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+    // Enviar formulario (POST)
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const newTask = {
+            title: formData.get('title').trim(),
+            description: formData.get('description').trim(),
+            status: formData.get('status'),
+            priority: formData.get('priority'),
+            dueDate: formData.get('dueDate') || '',
+            comments: []
+        };
+
+        await createTask(newTask, modal, form);
+    });
+}
+
+async function createTask(taskData, modal, form) {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(taskData)
+        });
+
+        if (!response.ok) throw new Error('Error al guardar la nueva tarea');
+
+        const createdTask = await response.json();
+
+        // Insertar en la columna correspondiente
+        const targetColumn = dropzones[createdTask.status];
+        if (targetColumn) {
+            targetColumn.appendChild(createTaskCard(createdTask));
+        }
+
+        updateCounters();
+        modal.close();
+        form.reset();
+    } catch (error) {
+        console.error('Error en POST:', error);
+    }
+}
+
+// ==========================================================================
+// ELIMINACIÓN DE TAREAS (DELETE)
+// ==========================================================================
+async function deleteTask(id, cardElement) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo eliminar la tarea en el servidor');
+        }
+
+        // Quitar la tarjeta visualmente y recalcular métricas
+        cardElement.remove();
+        updateCounters();
+    } catch (error) {
+        console.error('Error en DELETE:', error);
+    }
 }
