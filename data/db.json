@@ -35,7 +35,7 @@
     {
       "id": "3",
       "title": "Configurar repositorio Git",
-      "description": "Crear ramas main y dev, junto con la configuración de .gitignore.",
+      "description": "Crear ramas main y dev y crear la configuración de .gitignore.",
       "status": "doing",
       "priority": "Baja",
       "dueDate": "2026-09-10",

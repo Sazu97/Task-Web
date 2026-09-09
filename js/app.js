@@ -268,7 +268,35 @@ function openEditModal(task) {
     document.getElementById('edit-priority').value = task.priority;
     document.getElementById('edit-due-date').value = task.dueDate || '';
 
+    // Renderizar los comentarios de la tarea seleccionada
+    renderTaskComments(task.comments || []);
+
     modal.showModal();
+}
+
+function renderTaskComments(comments) {
+    const list = document.getElementById('edit-comments-list');
+    if (!list) return;
+
+    list.innerHTML = '';
+
+    if (comments.length === 0) {
+        list.innerHTML = '<p class="no-comments-msg">No hay comentarios aún.</p>';
+        return;
+    }
+
+    comments.forEach(comment => {
+        const commentEl = document.createElement('div');
+        commentEl.className = 'comment-item';
+        commentEl.innerHTML = `
+            <div class="comment-header">
+                <span class="comment-author">${comment.author}</span>
+                <span class="comment-date">${comment.date || ''}</span>
+            </div>
+            <p class="comment-text">${comment.text}</p>
+        `;
+        list.appendChild(commentEl);
+    });
 }
 
 function initEditModal() {

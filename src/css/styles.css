@@ -505,3 +505,65 @@ button {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==========================================================================
+    LISTADO DE COMENTARIOS
+   ========================================================================== */
+.comments-section {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.comments-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #131b2e;
+    margin-bottom: 0.75rem;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.comment-item {
+    background-color: #f2f3ff;
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8125rem;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: #131b2e;
+}
+
+.comment-date {
+    color: #64748b;
+}
+
+.comment-text {
+    color: #334155;
+    line-height: 1.4;
+}
+
+.no-comments-msg {
+    font-size: 0.8125rem;
+    color: #64748b;
+    font-style: italic;
+}
