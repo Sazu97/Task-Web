@@ -84,20 +84,31 @@ button {
 }
 
 /* Buscador */
-.search-box {
-    flex: 1;
-    max-width: 420px;
+.search-box,
+.mobile-search-box {
     position: relative;
     display: flex;
     align-items: center;
 }
 
+.search-box {
+    flex: 1;
+    max-width: 420px;
+}
+
+.mobile-search-box {
+    width: 100%;
+}
+
 .search-icon {
     position: absolute;
     left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
     color: #64748b;
     font-size: 20px;
     pointer-events: none;
+    line-height: 1;
 }
 
 .search-input {
@@ -182,6 +193,10 @@ button {
 
 /* Menú móvil desplegable */
 .mobile-dropdown {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    width: 100%;
     background-color: #ffffff;
     border-bottom: 1px solid #e2e8f0;
     padding: 1rem 1.5rem;

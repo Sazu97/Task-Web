@@ -1,5 +1,5 @@
 import { getTasks } from './api.js';
-import { renderAllTasks, initSearch } from './ui.js'; // <-- Añadido aquí
+import { renderAllTasks, initSearch, initMobileInteractions } from './ui.js';
 import { initDragAndDrop } from './dragDrop.js';
 import { initCreateModal, initEditModal } from './modals.js';
 
@@ -18,7 +18,7 @@ async function initApp() {
         initCreateModal();
         initEditModal();
         initSearch();
-        initMobileInteractions();
+        initMobileInteractions(); // <-- Comprueba que esté invocada aquí
     } catch (error) {
         console.error('Error al cargar las tareas:', error);
     }
