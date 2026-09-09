@@ -32,7 +32,9 @@ async function initApp() {
 
 // Vacía dropzones y distribuye las tarjetas según su estado
 function renderAllTasks(tasks) {
-    Object.values(dropzones).forEach(zone => (zone.innerHTML = ''));
+    Object.values(dropzones).forEach(zone => {
+        if (zone) zone.innerHTML = '';
+    });
 
     tasks.forEach(task => {
         const cardElement = createTaskCard(task);
@@ -78,6 +80,18 @@ function createTaskCard(task) {
         </div>
     </div>
     `;
+
+    // Escuchar el clic para borrar la tarea
+    const deleteBtn = card.querySelector('.card-delete-btn');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const confirmDelete = confirm(`¿Quieres eliminar la tarea "${task.title}"?`);
+            if (confirmDelete) {
+                await deleteTask(task.id, card);
+            }
+        });
+    }
 
     return card;
 }
@@ -231,5 +245,26 @@ async function createTask(taskData, modal, form) {
         form.reset();
     } catch (error) {
         console.error('Error en POST:', error);
+    }
+}
+
+// ==========================================================================
+// ELIMINACIÓN DE TAREAS (DELETE)
+// ==========================================================================
+async function deleteTask(id, cardElement) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo eliminar la tarea en el servidor');
+        }
+
+        // Quitar la tarjeta visualmente y recalcular métricas
+        cardElement.remove();
+        updateCounters();
+    } catch (error) {
+        console.error('Error en DELETE:', error);
     }
 }
