@@ -4,7 +4,7 @@
       "id": "1",
       "title": "Diseñar arquitectura del proyecto",
       "description": "Definir la estructura modular de directorios y el contrato de datos JSON.",
-      "status": "todo",
+      "status": "done",
       "priority": "Alta",
       "dueDate": "2026-09-15",
       "comments": [
@@ -13,6 +13,11 @@
           "author": "Dani",
           "text": "Comprobar compatibilidad de rutas relativas.",
           "date": "08 sep"
+        },
+        {
+          "author": "Sara",
+          "text": "Recuerda no sobrecargarlo",
+          "date": "9/9/2026"
         }
       ]
     },
@@ -20,7 +25,7 @@
       "id": "2",
       "title": "Maquetar vista responsive",
       "description": "Ajustar diseño de rejilla y selector de columnas para resoluciones móviles.",
-      "status": "done",
+      "status": "doing",
       "priority": "Media",
       "dueDate": "2026-09-18",
       "comments": [
@@ -35,8 +40,8 @@
     {
       "id": "3",
       "title": "Configurar repositorio Git",
-      "description": "Crear ramas main y dev, junto con la configuración de .gitignore.",
-      "status": "doing",
+      "description": "Crear ramas main y dev y crear la configuración de .gitignore.",
+      "status": "todo",
       "priority": "Baja",
       "dueDate": "2026-09-10",
       "comments": []
