@@ -203,61 +203,92 @@
     </dialog>
 
 
-<!-- Modal nativo para Editar Tarea -->
+<!-- Modal nativo para Detalle / Edición -->
     <dialog id="edit-modal" class="dialog-modal">
         <div class="dialog-content modal-lg">
             <header class="modal-header">
-                <h2 class="modal-title">Editar Tarea</h2>
-                <button type="button" id="btn-close-edit-modal" class="btn-icon" aria-label="Cerrar modal">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
+                <h2 id="modal-task-header-title" class="modal-title">Detalles de la Tarea</h2>
+                <div class="modal-header-actions">
+                    <button type="button" id="btn-toggle-edit" class="btn-icon" aria-label="Editar tarea" title="Editar tarea">
+                        <span class="material-symbols-outlined">edit</span>
+                    </button>
+                    <button type="button" id="btn-close-edit-modal" class="btn-icon" aria-label="Cerrar modal">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
             </header>
 
             <div class="modal-columns-layout">
-                <!-- Columna Izquierda: Formulario de Edición -->
-                <form id="edit-task-form" class="modal-form">
-                    <input type="hidden" id="edit-task-id" name="id" />
-
-                    <div class="form-group">
-                        <label for="edit-title" class="form-label">Título *</label>
-                        <input id="edit-title" name="title" type="text" class="form-control" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-description" class="form-label">Descripción</label>
-                        <textarea id="edit-description" name="description" class="form-control textarea" rows="3"></textarea>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-status" class="form-label">Columna / Estado</label>
-                            <select id="edit-status" name="status" class="form-control">
-                                <option value="todo">Por Hacer</option>
-                                <option value="doing">En Proceso</option>
-                                <option value="done">Finalizado</option>
-                            </select>
+                <!-- Columna Izquierda: Vista Detalle o Formulario de Edición -->
+                <div class="task-info-pane">
+                    <!-- 1. Vista de solo lectura (por defecto) -->
+                    <div id="task-detail-view" class="detail-view">
+                        <div class="detail-badges">
+                            <span id="detail-priority" class="badge"></span>
+                            <span id="detail-status" class="status-pill"></span>
                         </div>
 
-                        <div class="form-group">
-                            <label for="edit-priority" class="form-label">Prioridad</label>
-                            <select id="edit-priority" name="priority" class="form-control">
-                                <option value="Media">Media</option>
-                                <option value="Alta">Alta</option>
-                                <option value="Baja">Baja</option>
-                            </select>
+                        <h3 id="detail-title" class="detail-title"></h3>
+
+                        <div class="detail-field">
+                            <span class="detail-label">Descripción</span>
+                            <p id="detail-description" class="detail-text"></p>
+                        </div>
+
+                        <div class="detail-field">
+                            <span class="detail-label">Fecha límite</span>
+                            <div class="detail-date-wrap">
+                                <span class="material-symbols-outlined" style="font-size: 16px;">calendar_today</span>
+                                <span id="detail-due-date"></span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="edit-due-date" class="form-label">Fecha límite</label>
-                        <input id="edit-due-date" name="dueDate" type="date" class="form-control" />
-                    </div>
+                    <!-- 2. Formulario de Edición (oculto por defecto) -->
+                    <form id="edit-task-form" class="modal-form hidden">
+                        <input type="hidden" id="edit-task-id" name="id" />
 
-                    <footer class="modal-footer">
-                        <button type="button" id="btn-cancel-edit" class="btn btn-secondary">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                    </footer>
-                </form>
+                        <div class="form-group">
+                            <label for="edit-title" class="form-label">Título *</label>
+                            <input id="edit-title" name="title" type="text" class="form-control" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-description" class="form-label">Descripción</label>
+                            <textarea id="edit-description" name="description" class="form-control textarea" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-status" class="form-label">Columna / Estado</label>
+                                <select id="edit-status" name="status" class="form-control">
+                                    <option value="todo">Por Hacer</option>
+                                    <option value="doing">En Proceso</option>
+                                    <option value="done">Finalizado</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-priority" class="form-label">Prioridad</label>
+                                <select id="edit-priority" name="priority" class="form-control">
+                                    <option value="Media">Media</option>
+                                    <option value="Alta">Alta</option>
+                                    <option value="Baja">Baja</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-due-date" class="form-label">Fecha límite</label>
+                            <input id="edit-due-date" name="dueDate" type="date" class="form-control" />
+                        </div>
+
+                        <footer class="modal-footer">
+                            <button type="button" id="btn-cancel-edit" class="btn btn-secondary">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </footer>
+                    </form>
+                </div>
 
                 <!-- Columna Derecha: Panel de Comentarios -->
                 <section class="comments-section">

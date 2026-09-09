@@ -1,5 +1,5 @@
 /* ==========================================================================
-    RESET Y BASE
+    RESET Y BASE (VS CODE THEME)
    ========================================================================== */
 *,
 *::before,
@@ -11,8 +11,8 @@
 
 body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #faf8ff;
-    color: #131b2e;
+    background-color: #181818;
+    color: #e0e0e0;
     min-height: 100vh;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -33,17 +33,16 @@ button {
 }
 
 /* ==========================================================================
-    CABECERA Y NAVEGACIÓN
+    CABECERA (VS CODE TITLEBAR)
    ========================================================================== */
 .app-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 64px;
-    background-color: rgba(250, 248, 255, 0.95);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid #e2e7ff;
+    height: 56px;
+    background-color: #1f1f1f;
+    border-bottom: 1px solid #383838;
     z-index: 50;
 }
 
@@ -65,25 +64,24 @@ button {
 }
 
 .brand-logo {
-    width: 36px;
-    height: 36px;
-    background-color: #4f46e5;
+    width: 32px;
+    height: 32px;
+    background-color: #007acc;
     color: #ffffff;
-    border-radius: 12px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .brand-name {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    letter-spacing: -0.02em;
-    color: #131b2e;
+    letter-spacing: -0.01em;
+    color: #ffffff;
 }
 
-/* Buscador */
+/* Buscador tipo Command Palette */
 .search-box,
 .mobile-search-box {
     position: relative;
@@ -105,27 +103,31 @@ button {
     left: 0.75rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #64748b;
-    font-size: 20px;
+    color: #b0b0b0;
+    font-size: 18px;
     pointer-events: none;
     line-height: 1;
 }
 
 .search-input {
     width: 100%;
-    padding: 0.5rem 1rem 0.5rem 2.25rem;
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    color: #131b2e;
+    padding: 0.45rem 1rem 0.45rem 2.25rem;
+    background-color: #2b2b2b;
+    border: 1px solid #484848;
+    border-radius: 6px;
+    color: #ffffff;
     outline: none;
     font-size: 0.875rem;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.search-input::placeholder {
+    color: #9e9e9e;
 }
 
 .search-input:focus {
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    border-color: #007acc;
+    background-color: #333333;
 }
 
 /* Acciones cabecera */
@@ -145,9 +147,15 @@ button {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
     padding: 0.25rem 0.65rem;
-    background-color: #e2e7ff;
-    border-radius: 9999px;
-    color: #131b2e;
+    background-color: #262626;
+    border: 1px solid #3e3e3e;
+    border-radius: 4px;
+    color: #cccccc;
+}
+
+.stat-pill strong {
+    color: #ffffff;
+    font-weight: 700;
 }
 
 .btn {
@@ -155,31 +163,36 @@ button {
     align-items: center;
     justify-content: center;
     gap: 0.35rem;
-    padding: 0.5rem 1rem;
-    border-radius: 12px;
+    padding: 0.45rem 0.9rem;
+    border-radius: 4px;
     font-weight: 600;
-    font-size: 0.875rem;
-    transition: background-color 0.15s ease, transform 0.15s ease;
-}
-
-.btn:active {
-    transform: scale(0.98);
+    font-size: 0.85rem;
+    transition: background-color 0.15s ease;
 }
 
 .btn-primary {
-    background-color: #4f46e5;
+    background-color: #007acc;
     color: #ffffff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .btn-primary:hover {
-    background-color: #4338ca;
+    background-color: #0062a3;
+}
+
+.btn-secondary {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border: 1px solid #444444;
+}
+
+.btn-secondary:hover {
+    background-color: #383838;
 }
 
 .btn-icon {
-    padding: 0.5rem;
-    border-radius: 12px;
-    color: #64748b;
+    padding: 0.4rem;
+    border-radius: 4px;
+    color: #cccccc;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -187,23 +200,23 @@ button {
 }
 
 .btn-icon:hover {
-    background-color: #e2e7ff;
-    color: #131b2e;
+    background-color: #2d2d2d;
+    color: #ffffff;
 }
 
-/* Menú móvil desplegable */
+/* Menú móvil */
 .mobile-dropdown {
     position: absolute;
-    top: 64px;
+    top: 56px;
     left: 0;
     width: 100%;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
+    background-color: #1f1f1f;
+    border-bottom: 1px solid #383838;
     padding: 1rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
 .mobile-stats-row {
@@ -212,8 +225,12 @@ button {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
     padding-top: 0.5rem;
-    border-top: 1px solid #e2e8f0;
-    color: #64748b;
+    border-top: 1px solid #383838;
+    color: #b0b0b0;
+}
+
+.mobile-stats-row strong {
+    color: #ffffff;
 }
 
 .hidden {
@@ -224,9 +241,6 @@ button {
     display: none;
 }
 
-/* ==========================================================================
-    RESPONSIVE BASE (< 768px)
-   ========================================================================== */
 @media (max-width: 768px) {
     .mobile-only {
         display: flex !important;
