@@ -25,6 +25,7 @@ async function initApp() {
         renderAllTasks(tasks);
         initDragAndDrop();
         initCreateModal();
+        initEditModal();
     } catch (error) {
         console.error('Error al cargar las tareas:', error);
     }
@@ -66,10 +67,10 @@ function createTaskCard(task) {
         <button type="button" class="card-delete-btn" title="Eliminar tarea" aria-label="Eliminar tarea">
         <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
         </button>
-        </div>
-        <h3 class="card-title">${task.title}</h3>
-        <p class="card-desc">${task.description || 'Sin descripción.'}</p>
-        <div class="card-footer">
+    </div>
+    <h3 class="card-title">${task.title}</h3>
+    <p class="card-desc">${task.description || 'Sin descripción.'}</p>
+    <div class="card-footer">
         <div class="card-meta-item">
         <span class="material-symbols-outlined">calendar_today</span>
         <span>${formattedDate}</span>
@@ -92,6 +93,11 @@ function createTaskCard(task) {
             }
         });
     }
+
+    // Escuchar el clic sobre la tarjeta para abrir edición
+    card.addEventListener('click', () => {
+        openEditModal(task);
+    });
 
     return card;
 }
@@ -245,6 +251,81 @@ async function createTask(taskData, modal, form) {
         form.reset();
     } catch (error) {
         console.error('Error en POST:', error);
+    }
+}
+
+// ==========================================================================
+// EDICIÓN DE TAREAS (MODAL Y PATCH)
+// ==========================================================================
+function openEditModal(task) {
+    const modal = document.getElementById('edit-modal');
+    if (!modal) return;
+
+    document.getElementById('edit-task-id').value = task.id;
+    document.getElementById('edit-title').value = task.title;
+    document.getElementById('edit-description').value = task.description || '';
+    document.getElementById('edit-status').value = task.status;
+    document.getElementById('edit-priority').value = task.priority;
+    document.getElementById('edit-due-date').value = task.dueDate || '';
+
+    modal.showModal();
+}
+
+function initEditModal() {
+    const modal = document.getElementById('edit-modal');
+    const btnClose = document.getElementById('btn-close-edit-modal');
+    const btnCancel = document.getElementById('btn-cancel-edit');
+    const form = document.getElementById('edit-task-form');
+
+    if (!modal || !form) return;
+
+    const closeModal = () => modal.close();
+    if (btnClose) btnClose.addEventListener('click', closeModal);
+    if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const taskId = formData.get('id');
+
+        const updatedFields = {
+            title: formData.get('title').trim(),
+            description: formData.get('description').trim(),
+            status: formData.get('status'),
+            priority: formData.get('priority'),
+            dueDate: formData.get('dueDate') || ''
+        };
+
+        await updateTaskData(taskId, updatedFields, modal);
+    });
+}
+
+async function updateTaskData(id, updatedFields, modal) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedFields)
+        });
+
+        if (!response.ok) throw new Error('Error al actualizar la tarea');
+
+        const updatedTask = await response.json();
+
+        // Reemplazar la tarjeta vieja en el DOM
+        const oldCard = document.querySelector(`.task-card[data-id="${id}"]`);
+        if (oldCard) oldCard.remove();
+
+        const newCard = createTaskCard(updatedTask);
+        if (dropzones[updatedTask.status]) {
+            dropzones[updatedTask.status].appendChild(newCard);
+        }
+
+        updateCounters();
+        modal.close();
+    } catch (error) {
+        console.error('Error en PATCH de edición:', error);
     }
 }
 
