@@ -4,7 +4,7 @@
       "id": "1",
       "title": "Diseñar arquitectura del proyecto",
       "description": "Definir la estructura modular de directorios y el contrato de datos JSON.",
-      "status": "todo",
+      "status": "doing",
       "priority": "Alta",
       "dueDate": "2026-09-15",
       "comments": [
@@ -36,7 +36,7 @@
       "id": "3",
       "title": "Configurar repositorio Git",
       "description": "Crear ramas main y dev y crear la configuración de .gitignore.",
-      "status": "doing",
+      "status": "todo",
       "priority": "Baja",
       "dueDate": "2026-09-10",
       "comments": []
