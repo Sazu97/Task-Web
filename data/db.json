@@ -4,7 +4,7 @@
       "id": "1",
       "title": "Diseñar arquitectura del proyecto",
       "description": "Definir la estructura modular de directorios y el contrato de datos JSON.",
-      "status": "doing",
+      "status": "done",
       "priority": "Alta",
       "dueDate": "2026-09-15",
       "comments": [
@@ -25,7 +25,7 @@
       "id": "2",
       "title": "Maquetar vista responsive",
       "description": "Ajustar diseño de rejilla y selector de columnas para resoluciones móviles.",
-      "status": "done",
+      "status": "doing",
       "priority": "Media",
       "dueDate": "2026-09-18",
       "comments": [

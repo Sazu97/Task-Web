@@ -154,3 +154,38 @@ async function deleteTask(id, cardElement) {
         console.error('Error en DELETE:', error);
     }
 }
+
+// ==========================================================================
+// FILTRO DE BÚSQUEDA EN TIEMPO REAL
+// ==========================================================================
+export function initSearch() {
+    const searchInput = document.getElementById('search-input');
+    const searchInputMobile = document.getElementById('search-input-mobile');
+
+    function filterCards(query) {
+        const term = query.trim().toLowerCase();
+        const cards = document.querySelectorAll('.task-card');
+
+        cards.forEach(card => {
+            const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+            // Si el título incluye el texto escrito, se muestra; si no, se oculta
+            card.style.display = title.includes(term) ? '' : 'none';
+        });
+    }
+
+    // Escuchar cambios en la barra de escritorio y sincronizar con móvil
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            if (searchInputMobile) searchInputMobile.value = e.target.value;
+            filterCards(e.target.value);
+        });
+    }
+
+    // Escuchar cambios en la barra de móvil y sincronizar con escritorio
+    if (searchInputMobile) {
+        searchInputMobile.addEventListener('input', (e) => {
+            if (searchInput) searchInput.value = e.target.value;
+            filterCards(e.target.value);
+        });
+    }
+}
