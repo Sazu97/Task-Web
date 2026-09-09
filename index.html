@@ -203,9 +203,9 @@
     </dialog>
 
 
-    <!-- Modal nativo para Editar Tarea -->
+<!-- Modal nativo para Editar Tarea -->
     <dialog id="edit-modal" class="dialog-modal">
-        <div class="dialog-content modal-sm">
+        <div class="dialog-content modal-lg">
             <header class="modal-header">
                 <h2 class="modal-title">Editar Tarea</h2>
                 <button type="button" id="btn-close-edit-modal" class="btn-icon" aria-label="Cerrar modal">
@@ -213,59 +213,86 @@
                 </button>
             </header>
 
-            <form id="edit-task-form" class="modal-form">
-                <input type="hidden" id="edit-task-id" name="id" />
+            <div class="modal-columns-layout">
+                <!-- Columna Izquierda: Formulario de Edición -->
+                <form id="edit-task-form" class="modal-form">
+                    <input type="hidden" id="edit-task-id" name="id" />
 
-                <div class="form-group">
-                    <label for="edit-title" class="form-label">Título *</label>
-                    <input id="edit-title" name="title" type="text" class="form-control" required />
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-description" class="form-label">Descripción</label>
-                    <textarea id="edit-description" name="description" class="form-control textarea" rows="3"></textarea>
-                </div>
-
-                <div class="form-row">
                     <div class="form-group">
-                        <label for="edit-status" class="form-label">Columna / Estado</label>
-                        <select id="edit-status" name="status" class="form-control">
-                            <option value="todo">Por Hacer</option>
-                            <option value="doing">En Proceso</option>
-                            <option value="done">Finalizado</option>
-                        </select>
+                        <label for="edit-title" class="form-label">Título *</label>
+                        <input id="edit-title" name="title" type="text" class="form-control" required />
                     </div>
 
                     <div class="form-group">
-                        <label for="edit-priority" class="form-label">Prioridad</label>
-                        <select id="edit-priority" name="priority" class="form-control">
-                            <option value="Media">Media</option>
-                            <option value="Alta">Alta</option>
-                            <option value="Baja">Baja</option>
-                        </select>
+                        <label for="edit-description" class="form-label">Descripción</label>
+                        <textarea id="edit-description" name="description" class="form-control textarea" rows="3"></textarea>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="edit-due-date" class="form-label">Fecha límite</label>
-                    <input id="edit-due-date" name="dueDate" type="date" class="form-control" />
-                </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-status" class="form-label">Columna / Estado</label>
+                            <select id="edit-status" name="status" class="form-control">
+                                <option value="todo">Por Hacer</option>
+                                <option value="doing">En Proceso</option>
+                                <option value="done">Finalizado</option>
+                            </select>
+                        </div>
 
-                <footer class="modal-footer">
-                    <button type="button" id="btn-cancel-edit" class="btn btn-secondary">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                </footer>
-            </form>
+                        <div class="form-group">
+                            <label for="edit-priority" class="form-label">Prioridad</label>
+                            <select id="edit-priority" name="priority" class="form-control">
+                                <option value="Media">Media</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Baja">Baja</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <!-- Sección para visualizar comentarios (Ubicación correcta) -->
-            <section class="comments-section">
-                <h3 class="comments-title">
-                    <span class="material-symbols-outlined" style="font-size: 18px;">forum</span>
-                    Comentarios
-                </h3>
-                <div id="edit-comments-list" class="comments-list">
-                </div>
-            </section>
+                    <div class="form-group">
+                        <label for="edit-due-date" class="form-label">Fecha límite</label>
+                        <input id="edit-due-date" name="dueDate" type="date" class="form-control" />
+                    </div>
+
+                    <footer class="modal-footer">
+                        <button type="button" id="btn-cancel-edit" class="btn btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </footer>
+                </form>
+
+                <!-- Columna Derecha: Panel de Comentarios -->
+                <section class="comments-section">
+                    <h3 class="comments-title">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">forum</span>
+                        Comentarios
+                    </h3>
+
+                    <div id="edit-comments-list" class="comments-list">
+                    </div>
+
+                    <!-- Formulario para añadir nuevo comentario -->
+                    <form id="add-comment-form" class="comment-form">
+                        <input 
+                            id="comment-author-input" 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="Tu nombre (ej: Sara)" 
+                            required 
+                        />
+                        <div class="comment-input-row">
+                            <input 
+                                id="comment-text-input" 
+                                type="text" 
+                                class="form-control" 
+                                placeholder="Escribe un comentario..." 
+                                required 
+                            />
+                            <button type="submit" class="btn btn-primary" title="Enviar comentario">
+                                <span class="material-symbols-outlined">send</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
         </div>
     </dialog>
 </body>
