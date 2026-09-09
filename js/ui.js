@@ -1,16 +1,15 @@
 import { apiDeleteTask } from './api.js';
 import { openEditModal } from './modals.js';
 
+// ==========================================================================
+// 1. ESTADO GLOBAL DE USUARIOS Y SELECTORES DESPLEGABLES
+// ==========================================================================
 let appUsers = [];
 export const setAppUsers = (users) => { appUsers = users; };
 export const getAppUsers = () => appUsers;
 
-export const dropzones = {
-    todo: document.getElementById('tasks-todo'),
-    doing: document.getElementById('tasks-doing'),
-    done: document.getElementById('tasks-done')
-};
 
+//Llena las opciones de los <select> de creación y edición con los usuarios del backend.
 export function populateUserDropdowns(users) {
     const options = '<option value="">Sin asignar</option>' + 
         users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
@@ -20,6 +19,18 @@ export function populateUserDropdowns(users) {
     });
 }
 
+// ==========================================================================
+// 2. REFERENCIAS A CONTENEDORES (DROPZONES)
+// ==========================================================================
+export const dropzones = {
+    todo: document.getElementById('tasks-todo'),
+    doing: document.getElementById('tasks-doing'),
+    done: document.getElementById('tasks-done')
+};
+
+// ==========================================================================
+// 3. CONTADORES DINÁMICOS DEL TABLERO
+// ==========================================================================
 export function updateCounters() {
     ['todo', 'doing', 'done'].forEach(status => {
         const count = document.querySelectorAll(`#tasks-${status} .task-card`).length;
@@ -32,6 +43,9 @@ export function updateCounters() {
     });
 }
 
+// ==========================================================================
+// 4. RENDERIZADO Y MAQUETACIÓN DE TARJETAS (CARDS)
+// ==========================================================================
 export function renderAllTasks(tasks) {
     Object.values(dropzones).forEach(zone => { if (zone) zone.innerHTML = ''; });
     tasks.forEach(task => dropzones[task.status]?.appendChild(createTaskCard(task)));
@@ -66,6 +80,7 @@ export function createTaskCard(task) {
         </div>
     `;
 
+    // Escuchador para eliminación rápida (DELETE /tasks/:id)
     card.querySelector('.card-delete-btn')?.addEventListener('click', async (e) => {
         e.stopPropagation();
         if (confirm(`¿Quieres eliminar la tarea "${task.title}"?`)) {
@@ -75,10 +90,14 @@ export function createTaskCard(task) {
         }
     });
 
+    // Abrir vista detalle al hacer clic sobre la tarjeta
     card.addEventListener('click', () => openEditModal(task));
     return card;
 }
 
+// ==========================================================================
+// 5. RENDERIZADO DE COMENTARIOS
+// ==========================================================================
 export function renderTaskComments(comments = []) {
     const list = document.getElementById('edit-comments-list');
     if (!list) return;
@@ -96,6 +115,9 @@ export function renderTaskComments(comments = []) {
         `).join('');
 }
 
+// ==========================================================================
+// 6. BUSCADOR EN TIEMPO REAL (ESCRITORIO Y MÓVIL)
+// ==========================================================================
 export function initSearch() {
     const [desk, mob] = [document.getElementById('search-input'), document.getElementById('search-input-mobile')];
     const filter = (term) => {
@@ -112,6 +134,9 @@ export function initSearch() {
     }));
 }
 
+// ==========================================================================
+// 7. INTERACCIONES MÓVILES (MENÚ Y NAVEGACIÓN POR PESTAÑAS)
+// ==========================================================================
 export function initMobileInteractions() {
     const btnMenu = document.getElementById('btn-mobile-menu');
     const mobileMenu = document.getElementById('mobile-menu');

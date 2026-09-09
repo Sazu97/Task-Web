@@ -1,10 +1,23 @@
 import { apiCreateTask, apiUpdateTask, apiCreateUser } from './api.js';
-import { dropzones, createTaskCard, updateCounters, renderTaskComments, getAppUsers, setAppUsers, populateUserDropdowns } from './ui.js';
+import { 
+    dropzones, 
+    createTaskCard, 
+    updateCounters, 
+    renderTaskComments, 
+    getAppUsers, 
+    setAppUsers, 
+    populateUserDropdowns 
+} from './ui.js';
 
+// ==========================================================================
+// 1. ESTADO LOCAL Y CONFIGURACIÓN GENERAL
+// ==========================================================================
 let currentTask = null;
 const statusLabels = { todo: 'Por Hacer', doing: 'En Proceso', done: 'Finalizado' };
 
-// Enlaza apertura y cierre para cualquier diálogo nativo
+/**
+ * Enlaza apertura y cierre para cualquier elemento <dialog> nativo.
+ */
 function bindModalControls(modalId, btnOpenId, btnCloseId, btnCancelId) {
     const modal = document.getElementById(modalId);
     if (!modal) return null;
@@ -15,6 +28,9 @@ function bindModalControls(modalId, btnOpenId, btnCloseId, btnCancelId) {
     return modal;
 }
 
+// ==========================================================================
+// 2. MODAL DE USUARIOS (POST /users)
+// ==========================================================================
 export function initUserModal() {
     const modal = bindModalControls('user-modal', 'btn-open-user-modal', 'btn-close-user-modal', 'btn-cancel-user');
     const form = document.getElementById('create-user-form');
@@ -34,6 +50,9 @@ export function initUserModal() {
     });
 }
 
+// ==========================================================================
+// 3. MODAL DE CREACIÓN DE TAREAS (POST /tasks)
+// ==========================================================================
 export function initCreateModal() {
     const modal = bindModalControls('create-modal', 'btn-open-create-modal', 'btn-close-create-modal', 'btn-cancel-create');
     const form = document.getElementById('create-task-form');
@@ -50,12 +69,15 @@ export function initCreateModal() {
     });
 }
 
+// ==========================================================================
+// 4. VISTA DETALLE Y ALTERNANCIA EDICIÓN (READ-ONLY / FORM)
+// ==========================================================================
 export function openEditModal(task) {
     const modal = document.getElementById('edit-modal');
     if (!modal) return;
     currentTask = task;
 
-    // Rellenar vista de solo lectura
+    // Poblar campos de la vista de solo lectura
     document.getElementById('detail-title').textContent = task.title;
     document.getElementById('detail-description').textContent = task.description || 'Sin descripción añadida.';
     document.getElementById('detail-due-date').textContent = task.dueDate || 'Sin fecha límite';
@@ -67,6 +89,7 @@ export function openEditModal(task) {
     }
     document.getElementById('detail-status').textContent = statusLabels[task.status] || task.status;
 
+    // Renderizar avatar y nombre del responsable en el detalle
     const assigned = getAppUsers().find(u => String(u.id) === String(task.assigneeId));
     document.getElementById('detail-assignee-wrap').innerHTML = assigned 
         ? `<div class="detail-assignee-box"><img src="${assigned.avatar}" alt="${assigned.name}" class="avatar-md" /><span class="assignee-name">${assigned.name}</span></div>`
@@ -81,10 +104,13 @@ export function openEditModal(task) {
     }
 
     renderTaskComments(task.comments || []);
-    toggleEditView(false);
+    toggleEditView(false); // Iniciar siempre en modo solo lectura
     modal.showModal();
 }
 
+/**
+ * Conmuta entre el panel de lectura y el formulario editable.
+ */
 function toggleEditView(isEditing) {
     document.getElementById('task-detail-view')?.classList.toggle('hidden', isEditing);
     document.getElementById('edit-task-form')?.classList.toggle('hidden', !isEditing);
@@ -93,12 +119,16 @@ function toggleEditView(isEditing) {
     if (btnEdit) btnEdit.style.display = isEditing ? 'none' : 'flex';
 }
 
+// ==========================================================================
+// 5. CONTROLADORES DE EDICIÓN Y COMENTARIOS
+// ==========================================================================
 export function initEditModal() {
     const modal = document.getElementById('edit-modal');
     document.getElementById('btn-close-edit-modal')?.addEventListener('click', () => modal?.close());
     document.getElementById('btn-toggle-edit')?.addEventListener('click', () => toggleEditView(true));
     document.getElementById('btn-cancel-edit')?.addEventListener('click', () => toggleEditView(false));
 
+    // Guardar cambios editados (PATCH /tasks/:id)
     const form = document.getElementById('edit-task-form');
     form?.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -114,6 +144,7 @@ export function initEditModal() {
         updateCounters();
     });
 
+    // Añadir nuevo comentario (PATCH /tasks/:id -> comments)
     const commentForm = document.getElementById('add-comment-form');
     commentForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
