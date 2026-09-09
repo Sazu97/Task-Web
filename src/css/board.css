@@ -194,9 +194,7 @@
     PESTAÑAS Y VISTA MÓVIL (< 768px)
    ========================================================================== */
 .mobile-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    display: none;
 }
 
 .tab-button {
@@ -218,6 +216,12 @@
 }
 
 @media (max-width: 768px) {
+    .mobile-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
     .kanban-grid {
         grid-template-columns: 1fr;
     }
