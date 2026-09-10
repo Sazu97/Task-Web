@@ -57,14 +57,24 @@ export function createTaskCard(task) {
     card.className = 'task-card';
     card.dataset.id = task.id;
 
+    // 1. Avatar de usuario asignado (si existe)
     const assigned = appUsers.find(u => String(u.id) === String(task.assigneeId));
     const avatar = assigned 
         ? `<div class="card-assignee" title="Asignado a: ${assigned.name}"><img src="${assigned.avatar}" alt="${assigned.name}" class="avatar-sm" /></div>` 
         : '';
 
+    // 2. Pastilla de etiqueta coloreada (si existe en la tarea)
+    const tagClass = task.tag ? `tag-${task.tag.toLowerCase()}` : '';
+    const tagHtml = task.tag 
+        ? `<span class="tag-badge ${tagClass}">${task.tag}</span>` 
+        : '';
+
     card.innerHTML = `
         <div class="card-top">
-            <span class="badge badge-${task.priority.toLowerCase()}">${task.priority}</span>
+            <div class="card-badges">
+                <span class="badge badge-${task.priority.toLowerCase()}">${task.priority}</span>
+                ${tagHtml}
+            </div>
             <div style="display: flex; align-items: center; gap: 0.4rem;">
                 ${avatar}
                 <button type="button" class="card-delete-btn" title="Eliminar tarea" aria-label="Eliminar tarea">

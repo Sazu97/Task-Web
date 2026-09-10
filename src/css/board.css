@@ -123,7 +123,7 @@
     justify-content: space-between;
 }
 
-/* Badges con texto e intensidad corregidos para accesibilidad */
+/* Badges*/
 .badge {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.6875rem;
@@ -150,6 +150,50 @@
     background-color: rgba(63, 185, 80, 0.2);
     color: #7ee787;
     border: 1px solid #7ee787;
+}
+
+/* Agrupador de etiquetas y prioridad en la tarjeta */
+.card-badges {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+
+/* Estilo insignia sólida*/
+.tag-badge {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.625rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    padding: 0.15rem 0.45rem;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Colores sólidos distintivos */
+.tag-frontend {
+    background-color: #276381; /* Azul sólido */
+}
+
+.tag-backend {
+    background-color: #5d399b; /* Violeta */
+}
+
+.tag-devops {
+    background-color: #8f4733; /* Naranja oscuro */
+}
+
+.tag-diseño,
+.tag-diseno {
+    background-color: #75264a; /* Rosa / Magenta */
+}
+
+.tag-bugs {
+    background-color: #862929; /* Rojo bug */
 }
 
 .card-delete-btn {
