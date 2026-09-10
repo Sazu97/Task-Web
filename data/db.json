@@ -23,6 +23,7 @@
       "description": "Definir la estructura modular de directorios y el contrato de datos JSON.",
       "status": "todo",
       "priority": "Alta",
+      "tag": "Backend",
       "dueDate": "2026-09-15",
       "assigneeId": "2",
       "comments": [
@@ -45,6 +46,7 @@
       "description": "Ajustar diseño de rejilla y selector de columnas para resoluciones móviles.",
       "status": "doing",
       "priority": "Media",
+      "tag": "Frontend",
       "dueDate": "2026-09-18",
       "assigneeId": "1",
       "comments": [
@@ -62,6 +64,7 @@
       "description": "Crear ramas main y dev y crear la configuración de .gitignore.",
       "status": "done",
       "priority": "Baja",
+      "tag": "DevOps",
       "dueDate": "2026-09-10",
       "assigneeId": "hzAxBgnsfsw",
       "comments": []
@@ -71,6 +74,7 @@
       "description": "Encriptar la base de datos para protegerla.",
       "status": "todo",
       "priority": "Media",
+      "tag": "Backend",
       "dueDate": "2026-10-30",
       "assigneeId": "hzAxBgnsfsw",
       "comments": [],
@@ -81,6 +85,7 @@
       "description": "Añadir carrito, cálculo del precio del envío según CP y pasarela de pago.",
       "status": "doing",
       "priority": "Baja",
+      "tag": "Frontend",
       "dueDate": "",
       "assigneeId": "2",
       "comments": [],

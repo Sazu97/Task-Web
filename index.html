@@ -94,6 +94,50 @@
             </div>
         </section>
 
+    <!-- Botón para desplegar/plegar filtros en móvil (< 768px) -->
+        <button type="button" id="btn-toggle-filters-mobile" class="btn btn-secondary mobile-filter-toggle mobile-only">
+            <span class="material-symbols-outlined">tune</span>
+            <span>Mostrar filtros</span>
+        </button>
+
+        <!-- Barra de Filtros Avanzados (oculta en móvil por defecto) -->
+        <section id="filters-toolbar" class="filters-toolbar mobile-hidden">
+            <div class="filter-item">
+                <label for="filter-priority" class="filter-label">Prioridad:</label>
+                <select id="filter-priority" class="form-control filter-select">
+                    <option value="">Todas</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="filter-tag" class="filter-label">Categoría:</label>
+                <select id="filter-tag" class="form-control filter-select">
+                    <option value="">Todas</option>
+                    <option value="Frontend">Frontend</option>
+                    <option value="Backend">Backend</option>
+                    <option value="DevOps">DevOps</option>
+                    <option value="Diseño">Diseño</option>
+                    <option value="Bugs">Bugs</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="filter-assignee" class="filter-label">Responsable:</label>
+                <select id="filter-assignee" class="form-control filter-select">
+                    <option value="">Todos</option>
+                    <option value="unassigned">Sin asignar</option>
+                </select>
+            </div>
+
+            <button type="button" id="btn-reset-filters" class="btn btn-secondary btn-reset-filters" title="Limpiar todos los filtros">
+                <span class="material-symbols-outlined" style="font-size: 16px;">filter_alt_off</span>
+                <span>Limpiar</span>
+            </button>
+        </section>
+        
         <!-- Selector de pestañas para vista móvil (< 768px) -->
         <nav class="mobile-tabs mobile-only" id="mobile-column-tabs">
             <button type="button" data-tab="todo" class="tab-button active">
@@ -197,7 +241,17 @@
                     <label for="create-due-date" class="form-label">Fecha límite</label>
                     <input id="create-due-date" name="dueDate" type="date" class="form-control" />
                 </div>
-
+                <div class="form-group">
+                    <label for="create-tag" class="form-label">Categoría / Etiqueta</label>
+                    <select id="create-tag" name="tag" class="form-control">
+                        <option value="">Sin etiqueta</option>
+                        <option value="Frontend">Frontend</option>
+                        <option value="Backend">Backend</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="Diseño">Diseño</option>
+                        <option value="Bugs">Bugs</option>
+                    </select>
+                </div>
                 <!-- Asignación de Responsable -->
                 <div class="form-group">
                     <label for="create-assignee" class="form-label">Responsable</label>
@@ -239,6 +293,7 @@
                         <div class="detail-badges">
                             <span id="detail-priority" class="badge"></span>
                             <span id="detail-status" class="status-pill"></span>
+                            <span id="detail-tag" class="tag-badge"></span>
                         </div>
 
                         <h3 id="detail-title" class="detail-title"></h3>
@@ -302,6 +357,18 @@
                         <div class="form-group">
                             <label for="edit-due-date" class="form-label">Fecha límite</label>
                             <input id="edit-due-date" name="dueDate" type="date" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-tag" class="form-label">Categoría / Etiqueta</label>
+                            <select id="edit-tag" name="tag" class="form-control">
+                                <option value="">Sin etiqueta</option>
+                                <option value="Frontend">Frontend</option>
+                                <option value="Backend">Backend</option>
+                                <option value="DevOps">DevOps</option>
+                                <option value="Diseño">Diseño</option>
+                                <option value="Bugs">Bugs</option>
+                            </select>
                         </div>
 
                         <!-- Selector de Responsable en edición -->
