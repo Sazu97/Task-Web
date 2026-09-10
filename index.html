@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Tablero Kanban ágil para la gestión de tareas, flujos de trabajo y asignación de responsables en tiempo real." />
     <title>TaskBoard - Tablero Kanban</title>
 
     <!-- Fuentes e Iconos -->
@@ -20,14 +21,16 @@
     <link rel="stylesheet" href="src/css/base.css" />
     <link rel="stylesheet" href="src/css/board.css" />
     <link rel="stylesheet" href="src/css/modals.css" />
+
     <!-- Librería SortableJS -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
     <!-- Script principal de la aplicación -->
     <script type="module" src="js/app.js"></script>
 </head>
 
 <body>
-<!-- Cabecera y Navegación Principal -->
+    <!-- Cabecera y Navegación Principal -->
     <header class="app-header">
         <div class="header-container">
             <div class="brand-group">
@@ -40,7 +43,14 @@
             <!-- Buscador en tiempo real (Desktop/Tablet) -->
             <div class="search-box">
                 <span class="material-symbols-outlined search-icon">search</span>
-                <input id="search-input" type="text" placeholder="Buscar tarea por título..." class="search-input" />
+                <input 
+                    id="search-input" 
+                    type="text" 
+                    placeholder="Buscar tarea por título..." 
+                    class="search-input" 
+                    aria-label="Buscar tarea por título"
+                    autocomplete="off" 
+                />
             </div>
 
             <!-- Botones de Acción agrupados -->
@@ -65,7 +75,14 @@
         <div id="mobile-menu" class="mobile-dropdown hidden">
             <div class="mobile-search-box">
                 <span class="material-symbols-outlined search-icon">search</span>
-                <input id="search-input-mobile" type="text" placeholder="Buscar tarea..." class="search-input" />
+                <input 
+                    id="search-input-mobile" 
+                    type="text" 
+                    placeholder="Buscar tarea..." 
+                    class="search-input" 
+                    aria-label="Buscar tarea en móvil"
+                    autocomplete="off" 
+                />
             </div>
         </div>
     </header>
@@ -82,7 +99,7 @@
             </div>
         </section>
 
-    <!-- Botón para desplegar/plegar filtros en móvil (< 768px) -->
+        <!-- Botón para desplegar/plegar filtros en móvil (< 768px) -->
         <button type="button" id="btn-toggle-filters-mobile" class="btn btn-secondary mobile-filter-toggle mobile-only">
             <span class="material-symbols-outlined">tune</span>
             <span>Mostrar filtros</span>
@@ -139,7 +156,7 @@
             </button>
         </nav>
 
-        <!-- Tablero Kanban de 3 columnas fijas -->
+        <!-- Tablero Kanban de 3 columnas -->
         <div class="kanban-grid" id="kanban-board">
             <!-- Columna 1: Por Hacer -->
             <section class="kanban-column" data-column="todo">
@@ -149,9 +166,7 @@
                         <span id="counter-todo" class="column-counter">0</span>
                     </div>
                 </header>
-                <div id="tasks-todo" data-status="todo" class="task-dropzone">
-                    <!-- Dropzone para tareas pendientes -->
-                </div>
+                <div id="tasks-todo" data-status="todo" class="task-dropzone"></div>
             </section>
 
             <!-- Columna 2: En Proceso -->
@@ -162,9 +177,7 @@
                         <span id="counter-doing" class="column-counter">0</span>
                     </div>
                 </header>
-                <div id="tasks-doing" data-status="doing" class="task-dropzone">
-                    <!-- Dropzone para tareas en proceso -->
-                </div>
+                <div id="tasks-doing" data-status="doing" class="task-dropzone"></div>
             </section>
 
             <!-- Columna 3: Finalizado -->
@@ -175,18 +188,16 @@
                         <span id="counter-done" class="column-counter">0</span>
                     </div>
                 </header>
-                <div id="tasks-done" data-status="done" class="task-dropzone">
-                    <!-- Dropzone para tareas finalizadas -->
-                </div>
+                <div id="tasks-done" data-status="done" class="task-dropzone"></div>
             </section>
         </div>
     </main>
 
     <!-- Modal nativo para Crear Nueva Tarea -->
-    <dialog id="create-modal" class="dialog-modal">
+    <dialog id="create-modal" class="dialog-modal" aria-labelledby="modal-create-title">
         <div class="dialog-content modal-sm">
             <header class="modal-header">
-                <h2 class="modal-title">Nueva Tarea</h2>
+                <h2 id="modal-create-title" class="modal-title">Nueva Tarea</h2>
                 <button type="button" id="btn-close-create-modal" class="btn-icon" aria-label="Cerrar modal">
                     <span class="material-symbols-outlined">close</span>
                 </button>
@@ -196,7 +207,7 @@
                 <div class="form-group">
                     <label for="create-title" class="form-label">Título *</label>
                     <input id="create-title" name="title" type="text" class="form-control"
-                        placeholder="Ej: Implementar pasarela de pago" required />
+                        placeholder="Ej: Implementar pasarela de pago" required autocomplete="off" />
                 </div>
 
                 <div class="form-group">
@@ -229,6 +240,7 @@
                     <label for="create-due-date" class="form-label">Fecha límite</label>
                     <input id="create-due-date" name="dueDate" type="date" class="form-control" />
                 </div>
+
                 <div class="form-group">
                     <label for="create-tag" class="form-label">Categoría / Etiqueta</label>
                     <select id="create-tag" name="tag" class="form-control">
@@ -240,7 +252,7 @@
                         <option value="Bugs">Bugs</option>
                     </select>
                 </div>
-                <!-- Asignación de Responsable -->
+
                 <div class="form-group">
                     <label for="create-assignee" class="form-label">Responsable</label>
                     <select id="create-assignee" name="assigneeId" class="form-control">
@@ -249,9 +261,7 @@
                 </div>
 
                 <footer class="modal-footer">
-                    <button type="button" id="btn-cancel-create" class="btn btn-secondary">
-                        Cancelar
-                    </button>
+                    <button type="button" id="btn-cancel-create" class="btn btn-secondary">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar Tarea</button>
                 </footer>
             </form>
@@ -259,7 +269,7 @@
     </dialog>
 
     <!-- Modal nativo para Detalle / Edición -->
-    <dialog id="edit-modal" class="dialog-modal">
+    <dialog id="edit-modal" class="dialog-modal" aria-labelledby="modal-task-header-title">
         <div class="dialog-content modal-lg">
             <header class="modal-header">
                 <h2 id="modal-task-header-title" class="modal-title">Detalles de la Tarea</h2>
@@ -276,7 +286,7 @@
             <div class="modal-columns-layout">
                 <!-- Columna Izquierda: Vista Detalle o Formulario de Edición -->
                 <div class="task-info-pane">
-                    <!-- 1. Vista de solo lectura (por defecto) -->
+                    <!-- Vista de solo lectura -->
                     <div id="task-detail-view" class="detail-view">
                         <div class="detail-badges">
                             <span id="detail-priority" class="badge"></span>
@@ -299,7 +309,6 @@
                             </div>
                         </div>
 
-                        <!-- Visualización de Responsable -->
                         <div class="detail-field">
                             <span class="detail-label">Responsable</span>
                             <div id="detail-assignee-wrap" class="detail-assignee-wrap">
@@ -308,13 +317,13 @@
                         </div>
                     </div>
 
-                    <!-- 2. Formulario de Edición (oculto por defecto) -->
+                    <!-- Formulario de Edición -->
                     <form id="edit-task-form" class="modal-form hidden">
                         <input type="hidden" id="edit-task-id" name="id" />
 
                         <div class="form-group">
                             <label for="edit-title" class="form-label">Título *</label>
-                            <input id="edit-title" name="title" type="text" class="form-control" required />
+                            <input id="edit-title" name="title" type="text" class="form-control" required autocomplete="off" />
                         </div>
 
                         <div class="form-group">
@@ -359,7 +368,6 @@
                             </select>
                         </div>
 
-                        <!-- Selector de Responsable en edición -->
                         <div class="form-group">
                             <label for="edit-assignee" class="form-label">Responsable</label>
                             <select id="edit-assignee" name="assigneeId" class="form-control">
@@ -381,17 +389,17 @@
                         Comentarios
                     </h3>
 
-                    <div id="edit-comments-list" class="comments-list">
-                    </div>
+                    <div id="edit-comments-list" class="comments-list"></div>
 
-                    <!-- Formulario para añadir nuevo comentario -->
                     <form id="add-comment-form" class="comment-form">
                         <input 
                             id="comment-author-input" 
                             type="text" 
                             class="form-control" 
                             placeholder="Tu nombre (ej: Sara)" 
+                            aria-label="Tu nombre de usuario"
                             required 
+                            autocomplete="off"
                         />
                         <div class="comment-input-row">
                             <input 
@@ -399,9 +407,11 @@
                                 type="text" 
                                 class="form-control" 
                                 placeholder="Escribe un comentario..." 
+                                aria-label="Texto del comentario"
                                 required 
+                                autocomplete="off"
                             />
-                            <button type="submit" class="btn btn-primary" title="Enviar comentario">
+                            <button type="submit" class="btn btn-primary" title="Enviar comentario" aria-label="Enviar comentario">
                                 <span class="material-symbols-outlined">send</span>
                             </button>
                         </div>
@@ -412,10 +422,10 @@
     </dialog>
 
     <!-- Modal nativo para Registrar Usuario -->
-    <dialog id="user-modal" class="dialog-modal">
+    <dialog id="user-modal" class="dialog-modal" aria-labelledby="modal-user-title">
         <div class="dialog-content modal-sm">
             <header class="modal-header">
-                <h2 class="modal-title">Nuevo Usuario</h2>
+                <h2 id="modal-user-title" class="modal-title">Nuevo Usuario</h2>
                 <button type="button" id="btn-close-user-modal" class="btn-icon" aria-label="Cerrar modal">
                     <span class="material-symbols-outlined">close</span>
                 </button>
@@ -424,7 +434,7 @@
             <form id="create-user-form" class="modal-form">
                 <div class="form-group">
                     <label for="user-name-input" class="form-label">Nombre de usuario *</label>
-                    <input id="user-name-input" name="name" type="text" class="form-control" placeholder="Ej: Álex" required />
+                    <input id="user-name-input" name="name" type="text" class="form-control" placeholder="Ej: Álex" required autocomplete="off" />
                 </div>
 
                 <div class="form-group">

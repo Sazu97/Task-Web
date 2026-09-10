@@ -15,19 +15,22 @@ export function initDragAndDrop() {
             animation: 150,
             ghostClass: 'sortable-ghost',
             onEnd: async (evt) => {
-                // Solo guardamos si la tarjeta ha cambiado de columna
+                // Solo persistimos si la tarjeta ha cambiado efectivamente de columna
                 if (evt.from !== evt.to) {
                     const taskId = evt.item.dataset.id;
-                    const newStatus = evt.to.dataset.status;
+                    const newStatus = evt.to.dataset.status || evt.to.id.replace('tasks-', '');
 
-                    // Actualizar contadores inmediatamente en la interfaz
+                    // Actualización inmediata en la interfaz
                     updateCounters();
 
-                    // Persistir el cambio en json-server
                     try {
                         await apiUpdateStatus(taskId, newStatus);
                     } catch (error) {
-                        console.error('Error en PATCH:', error);
+                        console.error('Error al actualizar estado en el servidor:', error);
+                        // Reversión visual si la petición falla
+                        evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex] || null);
+                        updateCounters();
+                        alert('No se pudo guardar el cambio de estado. La tarjeta ha vuelto a su columna.');
                     }
                 }
             }

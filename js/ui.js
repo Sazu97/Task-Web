@@ -2,28 +2,40 @@ import { apiDeleteTask } from './api.js';
 import { openEditModal } from './modals.js';
 
 // ==========================================================================
+// UTILIDADES DE SEGURIDAD (SANITIZACIÓN CONTRA XSS)
+// ==========================================================================
+function escapeHTML(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// ==========================================================================
 // 1. ESTADO GLOBAL DE USUARIOS Y SELECTORES DESPLEGABLES
 // ==========================================================================
 let appUsers = [];
-export const setAppUsers = (users) => { appUsers = users; };
+export const setAppUsers = (users) => { appUsers = Array.isArray(users) ? users : []; };
 export const getAppUsers = () => appUsers;
 
-
-//Llena las opciones de los <select> de creación y edición con los usuarios del backend.
-export function populateUserDropdowns(users) {
+export function populateUserDropdowns(users = []) {
+    const userList = Array.isArray(users) ? users : [];
     const options = '<option value="">Sin asignar</option>' + 
-        users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+        userList.map(u => `<option value="${escapeHTML(u.id)}">${escapeHTML(u.name)}</option>`).join('');
+
     ['create-assignee', 'edit-assignee'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerHTML = options;
     });
 
-    // Desplegable del filtro superior
     const filterSelect = document.getElementById('filter-assignee');
     if (filterSelect) {
         filterSelect.innerHTML = '<option value="">Todos</option>' +
             '<option value="unassigned">Sin asignar</option>' +
-            users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+            userList.map(u => `<option value="${escapeHTML(u.id)}">${escapeHTML(u.name)}</option>`).join('');
     }
 }
 
@@ -41,16 +53,22 @@ export const dropzones = {
 // ==========================================================================
 export function updateCounters() {
     ['todo', 'doing', 'done'].forEach(status => {
-        const count = document.querySelectorAll(`#tasks-${status} .task-card`).length;
+        const dropzone = document.getElementById(`tasks-${status}`);
+        if (!dropzone) return;
+
+        // Cuenta únicamente las tarjetas que no han sido ocultadas por el filtro
+        const visibleCards = Array.from(dropzone.querySelectorAll('.task-card'))
+            .filter(card => card.style.display !== 'none');
+
         const columnCounter = document.getElementById(`counter-${status}`);
-        if (columnCounter) columnCounter.textContent = count;
+        if (columnCounter) columnCounter.textContent = visibleCards.length;
     });
 }
 
 // ==========================================================================
 // 4. RENDERIZADO Y MAQUETACIÓN DE TARJETAS (CARDS)
 // ==========================================================================
-export function renderAllTasks(tasks) {
+export function renderAllTasks(tasks = []) {
     Object.values(dropzones).forEach(zone => { if (zone) zone.innerHTML = ''; });
     tasks.forEach(task => dropzones[task.status]?.appendChild(createTaskCard(task)));
     updateCounters();
@@ -60,27 +78,33 @@ export function createTaskCard(task) {
     const card = document.createElement('article');
     card.className = 'task-card';
     card.dataset.id = task.id;
-    // Guardamos los datos de filtrado como atributos HTML
     card.dataset.priority = task.priority || '';
     card.dataset.tag = task.tag || '';
     card.dataset.assigneeId = task.assigneeId || '';
 
-    // 1. Avatar de usuario asignado (si existe)
+    // 1. Avatar seguro
     const assigned = appUsers.find(u => String(u.id) === String(task.assigneeId));
     const avatar = assigned 
-        ? `<div class="card-assignee" title="Asignado a: ${assigned.name}"><img src="${assigned.avatar}" alt="${assigned.name}" class="avatar-sm" /></div>` 
+        ? `<div class="card-assignee" title="Asignado a: ${escapeHTML(assigned.name)}"><img src="${escapeHTML(assigned.avatar)}" alt="${escapeHTML(assigned.name)}" class="avatar-sm" /></div>` 
         : '';
 
-    // 2. Pastilla de etiqueta coloreada (si existe en la tarea)
-    const tagClass = task.tag ? `tag-${task.tag.toLowerCase()}` : '';
-    const tagHtml = task.tag 
-        ? `<span class="tag-badge ${tagClass}">${task.tag}</span>` 
+    // 2. Etiqueta de categoría segura
+    const safeTag = escapeHTML(task.tag || '');
+    const tagClass = safeTag ? `tag-${safeTag.toLowerCase()}` : '';
+    const tagHtml = safeTag 
+        ? `<span class="tag-badge ${tagClass}">${safeTag}</span>` 
         : '';
+
+    const safePriority = escapeHTML(task.priority || 'Baja');
+    const safeTitle = escapeHTML(task.title || 'Sin título');
+    const safeDesc = escapeHTML(task.description || 'Sin descripción.');
+    const safeDate = escapeHTML(task.dueDate || 'Sin fecha');
+    const commentsCount = Array.isArray(task.comments) ? task.comments.length : 0;
 
     card.innerHTML = `
         <div class="card-top">
             <div class="card-badges">
-                <span class="badge badge-${task.priority.toLowerCase()}">${task.priority}</span>
+                <span class="badge badge-${safePriority.toLowerCase()}">${safePriority}</span>
                 ${tagHtml}
             </div>
             <div style="display: flex; align-items: center; gap: 0.4rem;">
@@ -90,15 +114,15 @@ export function createTaskCard(task) {
                 </button>
             </div>
         </div>
-        <h3 class="card-title">${task.title}</h3>
-        <p class="card-desc">${task.description || 'Sin descripción.'}</p>
+        <h3 class="card-title">${safeTitle}</h3>
+        <p class="card-desc">${safeDesc}</p>
         <div class="card-footer">
-            <div class="card-meta-item"><span class="material-symbols-outlined">calendar_today</span><span>${task.dueDate || 'Sin fecha'}</span></div>
-            <div class="card-meta-item"><span class="material-symbols-outlined">chat_bubble</span><span>${task.comments?.length || 0}</span></div>
+            <div class="card-meta-item"><span class="material-symbols-outlined">calendar_today</span><span>${safeDate}</span></div>
+            <div class="card-meta-item"><span class="material-symbols-outlined">chat_bubble</span><span>${commentsCount}</span></div>
         </div>
     `;
 
-    // Escuchador para eliminación rápida (DELETE /tasks/:id)
+    // Eliminación rápida
     card.querySelector('.card-delete-btn')?.addEventListener('click', async (e) => {
         e.stopPropagation();
         if (confirm(`¿Quieres eliminar la tarea "${task.title}"?`)) {
@@ -108,7 +132,6 @@ export function createTaskCard(task) {
         }
     });
 
-    // Abrir vista detalle al hacer clic sobre la tarjeta
     card.addEventListener('click', () => openEditModal(task));
     return card;
 }
@@ -125,10 +148,10 @@ export function renderTaskComments(comments = []) {
         : comments.map(c => `
             <div class="comment-item">
                 <div class="comment-header">
-                    <span class="comment-author">${c.author}</span>
-                    <span class="comment-date">${c.date || ''}</span>
+                    <span class="comment-author">${escapeHTML(c.author)}</span>
+                    <span class="comment-date">${escapeHTML(c.date || '')}</span>
                 </div>
-                <p class="comment-text">${c.text}</p>
+                <p class="comment-text">${escapeHTML(c.text)}</p>
             </div>
         `).join('');
 }
@@ -151,16 +174,10 @@ export function applyFilters() {
         const tag = card.dataset.tag || '';
         const assigneeId = card.dataset.assigneeId || '';
 
-        // 1. Condición de texto (título)
         const matchSearch = !term || title.includes(term);
-
-        // 2. Condición de prioridad
         const matchPriority = !priorityFilter || priority === priorityFilter;
-
-        // 3. Condición de categoría / tag
         const matchTag = !tagFilter || tag.toLowerCase() === tagFilter.toLowerCase();
 
-        // 4. Condición de responsable (soporta 'unassigned' o ID de usuario)
         let matchAssignee = true;
         if (assigneeFilter === 'unassigned') {
             matchAssignee = !assigneeId;
@@ -168,29 +185,28 @@ export function applyFilters() {
             matchAssignee = String(assigneeId) === String(assigneeFilter);
         }
 
-        // Mostrar solo si cumple las 4 condiciones a la vez
         const isVisible = matchSearch && matchPriority && matchTag && matchAssignee;
         card.style.display = isVisible ? '' : 'none';
     });
+
+    // Actualiza los contadores de cada columna según las tarjetas que quedaron visibles
+    updateCounters();
 }
 
 export function initFilters() {
     const desk = document.getElementById('search-input');
     const mob = document.getElementById('search-input-mobile');
 
-    // Sincronizar buscadores de texto (escritorio y móvil)
     [desk, mob].forEach(input => input?.addEventListener('input', (e) => {
         if (desk) desk.value = e.target.value;
         if (mob) mob.value = e.target.value;
         applyFilters();
     }));
 
-    // Escuchar cambios en los selectores desplegables
     ['filter-priority', 'filter-tag', 'filter-assignee'].forEach(id => {
         document.getElementById(id)?.addEventListener('change', applyFilters);
     });
 
-    // Botón de reset: restablece todos los controles y vuelve a mostrar todo
     document.getElementById('btn-reset-filters')?.addEventListener('click', () => {
         if (desk) desk.value = '';
         if (mob) mob.value = '';
@@ -204,9 +220,6 @@ export function initFilters() {
     });
 }
 
-// Alias para mantener compatibilidad si app.js invoca initSearch()
-export const initSearch = initFilters;
-
 // ==========================================================================
 // 7. INTERACCIONES MÓVILES (MENÚ, PESTAÑAS Y FILTROS)
 // ==========================================================================
@@ -216,7 +229,6 @@ export function initMobileInteractions() {
     const tabs = document.querySelectorAll('#mobile-column-tabs .tab-button');
     const columns = document.querySelectorAll('.kanban-column');
 
-    // Desplegable de filtros en móvil
     const btnFilterToggle = document.getElementById('btn-toggle-filters-mobile');
     const filtersToolbar = document.getElementById('filters-toolbar');
     btnFilterToggle?.addEventListener('click', () => {
