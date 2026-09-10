@@ -1,5 +1,5 @@
 /* ==========================================================================
-    MODALES (DIALOG) Y FORMULARIOS (ALTO CONTRASTE)
+    MODALES (DIALOG) Y FORMULARIOS 
    ========================================================================== */
 .dialog-modal {
     border: none;
@@ -20,16 +20,17 @@
     padding: 1.5rem;
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
     border: 1px solid #484848;
+    box-sizing: border-box;
 }
 
 .modal-sm {
-    width: 100%;
-    max-width: 480px;
+    width: 540px;
+    max-width: calc(100vw - 3rem);
 }
 
 .modal-lg {
-    width: 100%;
-    max-width: 820px;
+    width: 840px;
+    max-width: calc(100vw - 3rem);
 }
 
 .modal-header {
