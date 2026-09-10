@@ -2,7 +2,25 @@ import { apiDeleteTask } from './api.js';
 import { openEditModal } from './modals.js';
 
 // ==========================================================================
-// CONFIGURACIÓN Y SELECTORES BASE
+// 1. ESTADO GLOBAL DE USUARIOS Y SELECTORES DESPLEGABLES
+// ==========================================================================
+let appUsers = [];
+export const setAppUsers = (users) => { appUsers = users; };
+export const getAppUsers = () => appUsers;
+
+
+//Llena las opciones de los <select> de creación y edición con los usuarios del backend.
+export function populateUserDropdowns(users) {
+    const options = '<option value="">Sin asignar</option>' + 
+        users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+    ['create-assignee', 'edit-assignee'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = options;
+    });
+}
+
+// ==========================================================================
+// 2. REFERENCIAS A CONTENEDORES (DROPZONES)
 // ==========================================================================
 export const dropzones = {
     todo: document.getElementById('tasks-todo'),
@@ -11,187 +29,113 @@ export const dropzones = {
 };
 
 // ==========================================================================
-// CÁLCULO DE CONTADORES
+// 3. CONTADORES DINÁMICOS DEL TABLERO
 // ==========================================================================
 export function updateCounters() {
-    const todoCount = document.querySelectorAll('#tasks-todo .task-card').length;
-    const doingCount = document.querySelectorAll('#tasks-doing .task-card').length;
-    const doneCount = document.querySelectorAll('#tasks-done .task-card').length;
-
-    // Contadores de cada columna
-    const countTodo = document.getElementById('counter-todo');
-    const countDoing = document.getElementById('counter-doing');
-    const countDone = document.getElementById('counter-done');
-
-    if (countTodo) countTodo.textContent = todoCount;
-    if (countDoing) countDoing.textContent = doingCount;
-    if (countDone) countDone.textContent = doneCount;
-
-    // Contadores de la barra superior (Escritorio)
-    const statTodo = document.getElementById('stat-todo');
-    const statDoing = document.getElementById('stat-doing');
-    const statDone = document.getElementById('stat-done');
-
-    if (statTodo) statTodo.textContent = todoCount;
-    if (statDoing) statDoing.textContent = doingCount;
-    if (statDone) statDone.textContent = doneCount;
-
-    // Contadores de la barra superior (Móvil)
-    const statTodoMob = document.getElementById('stat-todo-mobile');
-    const statDoingMob = document.getElementById('stat-doing-mobile');
-    const statDoneMob = document.getElementById('stat-done-mobile');
-
-    if (statTodoMob) statTodoMob.textContent = todoCount;
-    if (statDoingMob) statDoingMob.textContent = doingCount;
-    if (statDoneMob) statDoneMob.textContent = doneCount;
+    ['todo', 'doing', 'done'].forEach(status => {
+        const count = document.querySelectorAll(`#tasks-${status} .task-card`).length;
+        ['counter', 'stat'].forEach(prefix => {
+            const el = document.getElementById(`${prefix}-${status}`);
+            if (el) el.textContent = count;
+        });
+        const mob = document.getElementById(`stat-${status}-mobile`);
+        if (mob) mob.textContent = count;
+    });
 }
 
 // ==========================================================================
-// TARJETAS DE TAREAS
+// 4. RENDERIZADO Y MAQUETACIÓN DE TARJETAS (CARDS)
 // ==========================================================================
-
-// Vacía dropzones y distribuye las tarjetas según su estado
 export function renderAllTasks(tasks) {
-    Object.values(dropzones).forEach(zone => {
-        if (zone) zone.innerHTML = '';
-    });
-
-    tasks.forEach(task => {
-        const cardElement = createTaskCard(task);
-        if (dropzones[task.status]) {
-            dropzones[task.status].appendChild(cardElement);
-        }
-    });
-
+    Object.values(dropzones).forEach(zone => { if (zone) zone.innerHTML = ''; });
+    tasks.forEach(task => dropzones[task.status]?.appendChild(createTaskCard(task)));
     updateCounters();
 }
 
-// Crea la estructura HTML de cada tarjeta
 export function createTaskCard(task) {
     const card = document.createElement('article');
     card.className = 'task-card';
     card.dataset.id = task.id;
 
-    const priorityClass = `badge-${task.priority.toLowerCase()}`;
-    const commentsCount = task.comments ? task.comments.length : 0;
-    const formattedDate = task.dueDate || 'Sin fecha';
+    const assigned = appUsers.find(u => String(u.id) === String(task.assigneeId));
+    const avatar = assigned 
+        ? `<div class="card-assignee" title="Asignado a: ${assigned.name}"><img src="${assigned.avatar}" alt="${assigned.name}" class="avatar-sm" /></div>` 
+        : '';
 
     card.innerHTML = `
-    <div class="card-top">
-        <span class="badge ${priorityClass}">${task.priority}</span>
-        <button type="button" class="card-delete-btn" title="Eliminar tarea" aria-label="Eliminar tarea">
-        <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
-        </button>
-    </div>
-    <h3 class="card-title">${task.title}</h3>
-    <p class="card-desc">${task.description || 'Sin descripción.'}</p>
-    <div class="card-footer">
-        <div class="card-meta-item">
-        <span class="material-symbols-outlined">calendar_today</span>
-        <span>${formattedDate}</span>
+        <div class="card-top">
+            <span class="badge badge-${task.priority.toLowerCase()}">${task.priority}</span>
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+                ${avatar}
+                <button type="button" class="card-delete-btn" title="Eliminar tarea" aria-label="Eliminar tarea">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+                </button>
+            </div>
         </div>
-        <div class="card-meta-item">
-        <span class="material-symbols-outlined">chat_bubble</span>
-        <span>${commentsCount}</span>
+        <h3 class="card-title">${task.title}</h3>
+        <p class="card-desc">${task.description || 'Sin descripción.'}</p>
+        <div class="card-footer">
+            <div class="card-meta-item"><span class="material-symbols-outlined">calendar_today</span><span>${task.dueDate || 'Sin fecha'}</span></div>
+            <div class="card-meta-item"><span class="material-symbols-outlined">chat_bubble</span><span>${task.comments?.length || 0}</span></div>
         </div>
-    </div>
     `;
 
-    // Escuchar el clic para borrar la tarea
-    const deleteBtn = card.querySelector('.card-delete-btn');
-    if (deleteBtn) {
-        deleteBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            const confirmDelete = confirm(`¿Quieres eliminar la tarea "${task.title}"?`);
-            if (confirmDelete) {
-                await deleteTask(task.id, card);
-            }
-        });
-    }
-
-    // Escuchar el clic sobre la tarjeta para abrir edición
-    card.addEventListener('click', () => {
-        openEditModal(task);
+    // Escuchador para eliminación rápida (DELETE /tasks/:id)
+    card.querySelector('.card-delete-btn')?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (confirm(`¿Quieres eliminar la tarea "${task.title}"?`)) {
+            await apiDeleteTask(task.id);
+            card.remove();
+            updateCounters();
+        }
     });
 
+    // Abrir vista detalle al hacer clic sobre la tarjeta
+    card.addEventListener('click', () => openEditModal(task));
     return card;
 }
 
-export function renderTaskComments(comments) {
+// ==========================================================================
+// 5. RENDERIZADO DE COMENTARIOS
+// ==========================================================================
+export function renderTaskComments(comments = []) {
     const list = document.getElementById('edit-comments-list');
     if (!list) return;
 
-    list.innerHTML = '';
-
-    if (comments.length === 0) {
-        list.innerHTML = '<p class="no-comments-msg">No hay comentarios aún.</p>';
-        return;
-    }
-
-    comments.forEach(comment => {
-        const commentEl = document.createElement('div');
-        commentEl.className = 'comment-item';
-        commentEl.innerHTML = `
-            <div class="comment-header">
-                <span class="comment-author">${comment.author}</span>
-                <span class="comment-date">${comment.date || ''}</span>
+    list.innerHTML = comments.length === 0 
+        ? '<p class="no-comments-msg">No hay comentarios aún.</p>'
+        : comments.map(c => `
+            <div class="comment-item">
+                <div class="comment-header">
+                    <span class="comment-author">${c.author}</span>
+                    <span class="comment-date">${c.date || ''}</span>
+                </div>
+                <p class="comment-text">${c.text}</p>
             </div>
-            <p class="comment-text">${comment.text}</p>
-        `;
-        list.appendChild(commentEl);
-    });
+        `).join('');
 }
 
 // ==========================================================================
-// ELIMINACIÓN DE TAREAS (DELETE)
-// ==========================================================================
-async function deleteTask(id, cardElement) {
-    try {
-        await apiDeleteTask(id);
-        cardElement.remove();
-        updateCounters();
-    } catch (error) {
-        console.error('Error en DELETE:', error);
-    }
-}
-
-// ==========================================================================
-// FILTRO DE BÚSQUEDA EN TIEMPO REAL
+// 6. BUSCADOR EN TIEMPO REAL (ESCRITORIO Y MÓVIL)
 // ==========================================================================
 export function initSearch() {
-    const searchInput = document.getElementById('search-input');
-    const searchInputMobile = document.getElementById('search-input-mobile');
-
-    function filterCards(query) {
-        const term = query.trim().toLowerCase();
-        const cards = document.querySelectorAll('.task-card');
-
-        cards.forEach(card => {
-            const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
-            // Si el título incluye el texto escrito, se muestra; si no, se oculta
-            card.style.display = title.includes(term) ? '' : 'none';
+    const [desk, mob] = [document.getElementById('search-input'), document.getElementById('search-input-mobile')];
+    const filter = (term) => {
+        document.querySelectorAll('.task-card').forEach(card => {
+            const match = card.querySelector('.card-title')?.textContent.toLowerCase().includes(term.toLowerCase().trim());
+            card.style.display = match ? '' : 'none';
         });
-    }
+    };
 
-    // Escuchar cambios en la barra de escritorio y sincronizar con móvil
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            if (searchInputMobile) searchInputMobile.value = e.target.value;
-            filterCards(e.target.value);
-        });
-    }
-
-    // Escuchar cambios en la barra de móvil y sincronizar con escritorio
-    if (searchInputMobile) {
-        searchInputMobile.addEventListener('input', (e) => {
-            if (searchInput) searchInput.value = e.target.value;
-            filterCards(e.target.value);
-        });
-    }
+    [desk, mob].forEach(input => input?.addEventListener('input', (e) => {
+        if (desk) desk.value = e.target.value;
+        if (mob) mob.value = e.target.value;
+        filter(e.target.value);
+    }));
 }
 
 // ==========================================================================
-// INTERACCIÓN MÓVIL (MENÚ HAMBURGUESA Y PESTAÑAS)
+// 7. INTERACCIONES MÓVILES (MENÚ Y NAVEGACIÓN POR PESTAÑAS)
 // ==========================================================================
 export function initMobileInteractions() {
     const btnMenu = document.getElementById('btn-mobile-menu');
@@ -199,47 +143,27 @@ export function initMobileInteractions() {
     const tabs = document.querySelectorAll('#mobile-column-tabs .tab-button');
     const columns = document.querySelectorAll('.kanban-column');
 
-    // Desplegar / ocultar menú hamburguesa
-    if (btnMenu && mobileMenu) {
-        btnMenu.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
+    btnMenu?.addEventListener('click', () => mobileMenu?.classList.toggle('hidden'));
 
-    // Alternar columnas visibles según la pestaña activa
-    function applyMobileTab(selectedStatus) {
-        columns.forEach(col => {
-            const colStatus = col.dataset.column;
-            if (colStatus === selectedStatus) {
-                col.classList.remove('mobile-hidden');
-            } else {
-                col.classList.add('mobile-hidden');
-            }
-        });
-    }
+    const setTab = (status) => {
+        columns.forEach(col => col.classList.toggle('mobile-hidden', col.dataset.column !== status));
+    };
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        setTab(tab.dataset.tab);
+    }));
 
-            const targetTab = tab.dataset.tab;
-            applyMobileTab(targetTab);
-        });
-    });
-
-    // Activar la primera pestaña por defecto si la pantalla inicia en tamaño móvil
-    if (window.innerWidth <= 768) {
-        applyMobileTab('todo');
-    }
-
-    // Gestionar el redimensionamiento de ventana
-    window.addEventListener('resize', () => {
+    const handleResize = () => {
         if (window.innerWidth > 768) {
             columns.forEach(col => col.classList.remove('mobile-hidden'));
         } else {
-            const activeTab = document.querySelector('#mobile-column-tabs .tab-button.active');
-            applyMobileTab(activeTab ? activeTab.dataset.tab : 'todo');
+            const active = document.querySelector('#mobile-column-tabs .tab-button.active');
+            setTab(active ? active.dataset.tab : 'todo');
         }
-    });
+    };
+
+    if (window.innerWidth <= 768) setTab('todo');
+    window.addEventListener('resize', handleResize);
 }

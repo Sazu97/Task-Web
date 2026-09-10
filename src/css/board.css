@@ -245,3 +245,21 @@
         display: none !important;
     }
 }
+
+/* ==========================================================================
+    AVATARES EN TARJETAS
+   ========================================================================== */
+.card-assignee {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.avatar-sm {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid #444444;
+    object-fit: cover;
+    background-color: #333333;
+}

@@ -43,13 +43,19 @@
                 <input id="search-input" type="text" placeholder="Buscar tarea por título..." class="search-input" />
             </div>
 
-            <!-- Métricas rápidas y Botón Nueva Tarea -->
+            <!-- Métricas rápidas y Botones de Acción -->
             <div class="header-actions">
                 <div class="quick-stats">
                     <span class="stat-pill">Por Hacer: <strong id="stat-todo">0</strong></span>
                     <span class="stat-pill">En Proceso: <strong id="stat-doing">0</strong></span>
                     <span class="stat-pill">Finalizado: <strong id="stat-done">0</strong></span>
                 </div>
+
+                <!-- Botón para abrir el registro de usuarios -->
+                <button id="btn-open-user-modal" type="button" class="btn btn-secondary" title="Registrar nuevo usuario">
+                    <span class="material-symbols-outlined">person_add</span>
+                    <span>Usuario</span>
+                </button>
 
                 <button id="btn-open-create-modal" type="button" class="btn btn-primary">
                     <span class="material-symbols-outlined">add</span>
@@ -192,6 +198,14 @@
                     <input id="create-due-date" name="dueDate" type="date" class="form-control" />
                 </div>
 
+                <!-- Asignación de Responsable -->
+                <div class="form-group">
+                    <label for="create-assignee" class="form-label">Responsable</label>
+                    <select id="create-assignee" name="assigneeId" class="form-control">
+                        <option value="">Sin asignar</option>
+                    </select>
+                </div>
+
                 <footer class="modal-footer">
                     <button type="button" id="btn-cancel-create" class="btn btn-secondary">
                         Cancelar
@@ -202,8 +216,7 @@
         </div>
     </dialog>
 
-
-<!-- Modal nativo para Detalle / Edición -->
+    <!-- Modal nativo para Detalle / Edición -->
     <dialog id="edit-modal" class="dialog-modal">
         <div class="dialog-content modal-lg">
             <header class="modal-header">
@@ -240,6 +253,14 @@
                             <div class="detail-date-wrap">
                                 <span class="material-symbols-outlined" style="font-size: 16px;">calendar_today</span>
                                 <span id="detail-due-date"></span>
+                            </div>
+                        </div>
+
+                        <!-- Visualización de Responsable -->
+                        <div class="detail-field">
+                            <span class="detail-label">Responsable</span>
+                            <div id="detail-assignee-wrap" class="detail-assignee-wrap">
+                                <span class="detail-text" style="padding: 0.35rem 0.6rem;">Sin asignar</span>
                             </div>
                         </div>
                     </div>
@@ -283,6 +304,14 @@
                             <input id="edit-due-date" name="dueDate" type="date" class="form-control" />
                         </div>
 
+                        <!-- Selector de Responsable en edición -->
+                        <div class="form-group">
+                            <label for="edit-assignee" class="form-label">Responsable</label>
+                            <select id="edit-assignee" name="assigneeId" class="form-control">
+                                <option value="">Sin asignar</option>
+                            </select>
+                        </div>
+
                         <footer class="modal-footer">
                             <button type="button" id="btn-cancel-edit" class="btn btn-secondary">Cancelar</button>
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
@@ -324,6 +353,35 @@
                     </form>
                 </section>
             </div>
+        </div>
+    </dialog>
+
+    <!-- Modal nativo para Registrar Usuario -->
+    <dialog id="user-modal" class="dialog-modal">
+        <div class="dialog-content modal-sm">
+            <header class="modal-header">
+                <h2 class="modal-title">Nuevo Usuario</h2>
+                <button type="button" id="btn-close-user-modal" class="btn-icon" aria-label="Cerrar modal">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </header>
+
+            <form id="create-user-form" class="modal-form">
+                <div class="form-group">
+                    <label for="user-name-input" class="form-label">Nombre de usuario *</label>
+                    <input id="user-name-input" name="name" type="text" class="form-control" placeholder="Ej: Álex" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="user-avatar-input" class="form-label">URL del Avatar (opcional)</label>
+                    <input id="user-avatar-input" name="avatar" type="url" class="form-control" placeholder="https://api.dicebear.com/7.x/bottts/svg?seed=Alex" />
+                </div>
+
+                <footer class="modal-footer">
+                    <button type="button" id="btn-cancel-user" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                </footer>
+            </form>
         </div>
     </dialog>
 </body>

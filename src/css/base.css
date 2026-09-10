@@ -241,6 +241,9 @@ button {
     display: none;
 }
 
+/* ==========================================================================
+    ADAPTACIÓN RESPONSIVE DE CABECERA (< 768px y móviles)
+   ========================================================================== */
 @media (max-width: 768px) {
     .mobile-only {
         display: flex !important;
@@ -249,5 +252,41 @@ button {
     .search-box,
     .quick-stats {
         display: none;
+    }
+
+    .header-container {
+        padding: 0 1rem;
+        gap: 0.75rem;
+    }
+
+    .header-actions {
+        gap: 0.5rem;
+    }
+}
+
+/* En móviles (< 580px): convertir los botones en iconos compactos */
+@media (max-width: 580px) {
+    .header-container {
+        padding: 0 0.75rem;
+    }
+
+    .brand-name {
+        font-size: 1.05rem;
+    }
+
+    .header-actions {
+        gap: 0.35rem;
+    }
+
+    /* Oculta el texto dentro de los botones de acción dejando solo su icono */
+    .header-actions .btn span:not(.material-symbols-outlined) {
+        display: none;
+    }
+
+    /* Ajusta el botón a formato cuadrado táctil */
+    .header-actions .btn {
+        padding: 0.45rem;
+        width: 36px;
+        height: 36px;
     }
 }

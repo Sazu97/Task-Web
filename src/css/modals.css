@@ -1,5 +1,5 @@
 /* ==========================================================================
-    MODALES (DIALOG) Y FORMULARIOS (ALTO CONTRASTE)
+    MODALES (DIALOG) Y FORMULARIOS 
    ========================================================================== */
 .dialog-modal {
     border: none;
@@ -20,16 +20,17 @@
     padding: 1.5rem;
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
     border: 1px solid #484848;
+    box-sizing: border-box;
 }
 
 .modal-sm {
-    width: 100%;
-    max-width: 480px;
+    width: 540px;
+    max-width: calc(100vw - 3rem);
 }
 
 .modal-lg {
-    width: 100%;
-    max-width: 820px;
+    width: 840px;
+    max-width: calc(100vw - 3rem);
 }
 
 .modal-header {
@@ -307,4 +308,32 @@ select.form-control option {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8125rem;
     color: #cccccc;
+}
+
+/* ==========================================================================
+    AVATAR EN VISTA DETALLE
+   ========================================================================== */
+.detail-assignee-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background-color: #262626;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #383838;
+}
+
+.avatar-md {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #484848;
+    object-fit: cover;
+    background-color: #333333;
+}
+
+.assignee-name {
+    font-size: 0.875rem;
+    color: #ffffff;
+    font-weight: 500;
 }

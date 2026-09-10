@@ -1,12 +1,30 @@
 {
+  "users": [
+    {
+      "id": "1",
+      "name": "Sara",
+      "avatar": "https://api.dicebear.com/10.x/pixelbot/svg?seed=Sara"
+    },
+    {
+      "id": "2",
+      "name": "Dani",
+      "avatar": "https://api.dicebear.com/10.x/pixelbot/svg?seed=Dani"
+    },
+    {
+      "name": "Rocío",
+      "avatar": "https://api.dicebear.com/10.x/pixelbot/svg?seed=Roc%C3%ADo",
+      "id": "hzAxBgnsfsw"
+    }
+  ],
   "tasks": [
     {
       "id": "1",
       "title": "Diseñar arquitectura del proyecto",
       "description": "Definir la estructura modular de directorios y el contrato de datos JSON.",
-      "status": "done",
+      "status": "todo",
       "priority": "Alta",
       "dueDate": "2026-09-15",
+      "assigneeId": "2",
       "comments": [
         {
           "id": "c-1",
@@ -28,6 +46,7 @@
       "status": "doing",
       "priority": "Media",
       "dueDate": "2026-09-18",
+      "assigneeId": "1",
       "comments": [
         {
           "id": "c-2",
@@ -41,10 +60,31 @@
       "id": "3",
       "title": "Configurar repositorio Git",
       "description": "Crear ramas main y dev y crear la configuración de .gitignore.",
-      "status": "todo",
+      "status": "done",
       "priority": "Baja",
       "dueDate": "2026-09-10",
+      "assigneeId": "hzAxBgnsfsw",
       "comments": []
+    },
+    {
+      "title": "Mejorar la seguridad de la base de datos",
+      "description": "Encriptar la base de datos para protegerla.",
+      "status": "todo",
+      "priority": "Media",
+      "dueDate": "2026-10-30",
+      "assigneeId": "hzAxBgnsfsw",
+      "comments": [],
+      "id": "1Anlj123Wb0"
+    },
+    {
+      "title": "Implementar compra",
+      "description": "Añadir carrito, cálculo del precio del envío según CP y pasarela de pago.",
+      "status": "doing",
+      "priority": "Baja",
+      "dueDate": "",
+      "assigneeId": "2",
+      "comments": [],
+      "id": "PBjrlEutwnk"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
