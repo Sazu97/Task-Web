@@ -17,6 +17,14 @@ export function populateUserDropdowns(users) {
         const el = document.getElementById(id);
         if (el) el.innerHTML = options;
     });
+
+    // Desplegable del filtro superior
+    const filterSelect = document.getElementById('filter-assignee');
+    if (filterSelect) {
+        filterSelect.innerHTML = '<option value="">Todos</option>' +
+            '<option value="unassigned">Sin asignar</option>' +
+            users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+    }
 }
 
 // ==========================================================================
@@ -56,6 +64,10 @@ export function createTaskCard(task) {
     const card = document.createElement('article');
     card.className = 'task-card';
     card.dataset.id = task.id;
+    // Guardamos los datos de filtrado como atributos HTML
+    card.dataset.priority = task.priority || '';
+    card.dataset.tag = task.tag || '';
+    card.dataset.assigneeId = task.assigneeId || '';
 
     // 1. Avatar de usuario asignado (si existe)
     const assigned = appUsers.find(u => String(u.id) === String(task.assigneeId));
@@ -126,24 +138,78 @@ export function renderTaskComments(comments = []) {
 }
 
 // ==========================================================================
-// 6. BUSCADOR EN TIEMPO REAL (ESCRITORIO Y MÓVIL)
+// 6. FILTROS AVANZADOS Y BUSCADOR EN TIEMPO REAL
 // ==========================================================================
-export function initSearch() {
-    const [desk, mob] = [document.getElementById('search-input'), document.getElementById('search-input-mobile')];
-    const filter = (term) => {
-        document.querySelectorAll('.task-card').forEach(card => {
-            const match = card.querySelector('.card-title')?.textContent.toLowerCase().includes(term.toLowerCase().trim());
-            card.style.display = match ? '' : 'none';
-        });
-    };
+export function applyFilters() {
+    const searchDesk = document.getElementById('search-input');
+    const searchMob = document.getElementById('search-input-mobile');
+    const term = (searchDesk?.value || searchMob?.value || '').toLowerCase().trim();
 
+    const priorityFilter = document.getElementById('filter-priority')?.value || '';
+    const tagFilter = document.getElementById('filter-tag')?.value || '';
+    const assigneeFilter = document.getElementById('filter-assignee')?.value || '';
+
+    document.querySelectorAll('.task-card').forEach(card => {
+        const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+        const priority = card.dataset.priority || '';
+        const tag = card.dataset.tag || '';
+        const assigneeId = card.dataset.assigneeId || '';
+
+        // 1. Condición de texto (título)
+        const matchSearch = !term || title.includes(term);
+
+        // 2. Condición de prioridad
+        const matchPriority = !priorityFilter || priority === priorityFilter;
+
+        // 3. Condición de categoría / tag
+        const matchTag = !tagFilter || tag.toLowerCase() === tagFilter.toLowerCase();
+
+        // 4. Condición de responsable (soporta 'unassigned' o ID de usuario)
+        let matchAssignee = true;
+        if (assigneeFilter === 'unassigned') {
+            matchAssignee = !assigneeId;
+        } else if (assigneeFilter) {
+            matchAssignee = String(assigneeId) === String(assigneeFilter);
+        }
+
+        // Mostrar solo si cumple las 4 condiciones a la vez
+        const isVisible = matchSearch && matchPriority && matchTag && matchAssignee;
+        card.style.display = isVisible ? '' : 'none';
+    });
+}
+
+export function initFilters() {
+    const desk = document.getElementById('search-input');
+    const mob = document.getElementById('search-input-mobile');
+
+    // Sincronizar buscadores de texto (escritorio y móvil)
     [desk, mob].forEach(input => input?.addEventListener('input', (e) => {
         if (desk) desk.value = e.target.value;
         if (mob) mob.value = e.target.value;
-        filter(e.target.value);
+        applyFilters();
     }));
+
+    // Escuchar cambios en los selectores desplegables
+    ['filter-priority', 'filter-tag', 'filter-assignee'].forEach(id => {
+        document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    // Botón de reset: restablece todos los controles y vuelve a mostrar todo
+    document.getElementById('btn-reset-filters')?.addEventListener('click', () => {
+        if (desk) desk.value = '';
+        if (mob) mob.value = '';
+        const prio = document.getElementById('filter-priority');
+        const tag = document.getElementById('filter-tag');
+        const user = document.getElementById('filter-assignee');
+        if (prio) prio.value = '';
+        if (tag) tag.value = '';
+        if (user) user.value = '';
+        applyFilters();
+    });
 }
 
+// Alias para mantener compatibilidad si app.js invoca initSearch()
+export const initSearch = initFilters;
 // ==========================================================================
 // 7. INTERACCIONES MÓVILES (MENÚ Y NAVEGACIÓN POR PESTAÑAS)
 // ==========================================================================
