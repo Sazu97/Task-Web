@@ -210,14 +210,27 @@ export function initFilters() {
 
 // Alias para mantener compatibilidad si app.js invoca initSearch()
 export const initSearch = initFilters;
+
 // ==========================================================================
-// 7. INTERACCIONES MÓVILES (MENÚ Y NAVEGACIÓN POR PESTAÑAS)
+// 7. INTERACCIONES MÓVILES (MENÚ, PESTAÑAS Y FILTROS)
 // ==========================================================================
 export function initMobileInteractions() {
     const btnMenu = document.getElementById('btn-mobile-menu');
     const mobileMenu = document.getElementById('mobile-menu');
     const tabs = document.querySelectorAll('#mobile-column-tabs .tab-button');
     const columns = document.querySelectorAll('.kanban-column');
+
+    // Desplegable de filtros en móvil
+    const btnFilterToggle = document.getElementById('btn-toggle-filters-mobile');
+    const filtersToolbar = document.getElementById('filters-toolbar');
+    btnFilterToggle?.addEventListener('click', () => {
+        const isHidden = filtersToolbar?.classList.toggle('mobile-hidden');
+        btnFilterToggle.classList.toggle('active', !isHidden);
+        const labelSpan = btnFilterToggle.querySelector('span:last-child');
+        if (labelSpan) {
+            labelSpan.textContent = isHidden ? 'Mostrar filtros' : 'Ocultar filtros';
+        }
+    });
 
     btnMenu?.addEventListener('click', () => mobileMenu?.classList.toggle('hidden'));
 

@@ -94,8 +94,14 @@
             </div>
         </section>
 
-        <!-- Barra de Filtros Avanzados -->
-        <section class="filters-toolbar">
+    <!-- Botón para desplegar/plegar filtros en móvil (< 768px) -->
+        <button type="button" id="btn-toggle-filters-mobile" class="btn btn-secondary mobile-filter-toggle mobile-only">
+            <span class="material-symbols-outlined">tune</span>
+            <span>Mostrar filtros</span>
+        </button>
+
+        <!-- Barra de Filtros Avanzados (oculta en móvil por defecto) -->
+        <section id="filters-toolbar" class="filters-toolbar mobile-hidden">
             <div class="filter-item">
                 <label for="filter-priority" class="filter-label">Prioridad:</label>
                 <select id="filter-priority" class="form-control filter-select">
