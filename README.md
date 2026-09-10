@@ -138,21 +138,6 @@ La aplicación ha sido auditada exhaustivamente mediante Google Lighthouse, logr
 | 🔎 **SEO** | **100** | ✅ Indexable |
 
 <div align="center">
-
-![Auditoría Lighthouse 100/100](docs/lighthouse.png)
-
-</div>
-
----
-
-## 📸 Evidencias de Funcionamiento
-
-*(Capturas de pantalla del flujo operativo en entorno local)*
-
-| Tablero Principal y Columnas | Detalle de Tarea y Comentarios |
-| :---: | :---: |
-| ![Tablero](docs/board-view.png) | ![Detalle](docs/detail-modal.png) |
-
 | Filtros Combinados y Búsqueda | Adaptabilidad Móvil (Responsive) |
 | :---: | :---: |
 | ![Filtros](docs/filters-view.png) | ![Móvil](docs/mobile-view.png) |
