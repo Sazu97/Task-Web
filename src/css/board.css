@@ -1,5 +1,5 @@
 /* ==========================================================================
-    TABLERO KANBAN Y COLUMNAS (ALTO CONTRASTE)
+    TABLERO KANBAN Y COLUMNAS
    ========================================================================== */
 .board-main {
     max-width: 1400px;
@@ -21,7 +21,7 @@
 
 .board-subtitle {
     font-size: 0.875rem;
-    color: #b0b0b0; /* Ratio > 4.5:1 */
+    color: #b0b0b0;
 }
 
 .kanban-grid {
@@ -97,13 +97,13 @@
 }
 
 /* ==========================================================================
-    TARJETAS DE TAREA (ALTO CONTRASTE)
+    TARJETAS DE TAREA
    ========================================================================== */
 .task-card {
     background-color: #282828;
     border-radius: 6px;
     padding: 0.9rem;
-    border: 1px solid #444444; /* Borde más visible */
+    border: 1px solid #444444;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -123,7 +123,7 @@
     justify-content: space-between;
 }
 
-/* Badges*/
+/* Badges de Prioridad */
 .badge {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.6875rem;
@@ -135,8 +135,8 @@
 }
 
 .badge-alta {
-    background-color: rgba(255, 85, 85, 0.2);
-    color: #ff7b72;
+    background-color: rgba(255, 85, 85, 0.15);
+    color: #ffa198;
     border: 1px solid #ff7b72;
 }
 
@@ -160,7 +160,7 @@
     flex-wrap: wrap;
 }
 
-/* Estilo insignia sólida*/
+/* Estilo insignia sólida de categoría */
 .tag-badge {
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.625rem;
@@ -174,30 +174,29 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Colores sólidos distintivos */
 .tag-frontend {
-    background-color: #276381; /* Azul sólido */
+    background-color: #276381;
 }
 
 .tag-backend {
-    background-color: #5d399b; /* Violeta */
+    background-color: #5d399b;
 }
 
 .tag-devops {
-    background-color: #8f4733; /* Naranja oscuro */
+    background-color: #8f4733;
 }
 
 .tag-diseño,
 .tag-diseno {
-    background-color: #75264a; /* Rosa / Magenta */
+    background-color: #75264a;
 }
 
 .tag-bugs {
-    background-color: #862929; /* Rojo bug */
+    background-color: #862929;
 }
 
 .card-delete-btn {
-    color: #a0a0a0;
+    color: #b8b8b8;
     padding: 0.2rem;
     border-radius: 4px;
     display: flex;
@@ -213,12 +212,12 @@
     font-size: 0.9375rem;
     font-weight: 600;
     line-height: 1.35;
-    color: #ffffff; /* Máximo contraste */
+    color: #ffffff;
 }
 
 .card-desc {
     font-size: 0.8125rem;
-    color: #cccccc; /* Pasa de #858585 a #cccccc para lectura nítida */
+    color: #cccccc;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -246,7 +245,7 @@
 
 .card-meta-item .material-symbols-outlined {
     font-size: 16px;
-    color: #a0a0a0;
+    color: #b8b8b8;
 }
 
 /* ==========================================================================
@@ -367,6 +366,27 @@
 }
 
 @media (max-width: 768px) {
+    .mobile-filter-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        width: 100%;
+        margin-bottom: 1rem;
+        padding: 0.6rem;
+        font-weight: 600;
+        border-radius: 6px;
+    }
+
+    .mobile-filter-toggle.active {
+        background-color: #383838;
+        border-color: #007acc;
+    }
+
+    .filters-toolbar.mobile-hidden {
+        display: none !important;
+    }
+
     .filters-toolbar {
         gap: 0.75rem;
     }
@@ -386,30 +406,5 @@
         width: 100%;
         margin-left: 0;
         justify-content: center;
-    }
-    .mobile-filter-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.4rem;
-        width: 100%;
-        margin-bottom: 1rem;
-        padding: 0.6rem;
-        font-weight: 600;
-        border-radius: 6px;
-    }
-
-    .mobile-filter-toggle.active {
-        background-color: #383838;
-        border-color: #007acc;
-    }
-
-    /* Ocultar la barra en móvil si tiene la clase */
-    .filters-toolbar.mobile-hidden {
-        display: none !important;
-    }
-
-    .filters-toolbar {
-        gap: 0.75rem;
     }
 }
