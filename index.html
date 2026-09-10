@@ -197,7 +197,17 @@
                     <label for="create-due-date" class="form-label">Fecha límite</label>
                     <input id="create-due-date" name="dueDate" type="date" class="form-control" />
                 </div>
-
+                <div class="form-group">
+                    <label for="create-tag" class="form-label">Categoría / Etiqueta</label>
+                    <select id="create-tag" name="tag" class="form-control">
+                        <option value="">Sin etiqueta</option>
+                        <option value="Frontend">Frontend</option>
+                        <option value="Backend">Backend</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="Diseño">Diseño</option>
+                        <option value="Bugs">Bugs</option>
+                    </select>
+                </div>
                 <!-- Asignación de Responsable -->
                 <div class="form-group">
                     <label for="create-assignee" class="form-label">Responsable</label>
@@ -239,6 +249,7 @@
                         <div class="detail-badges">
                             <span id="detail-priority" class="badge"></span>
                             <span id="detail-status" class="status-pill"></span>
+                            <span id="detail-tag" class="tag-badge"></span>
                         </div>
 
                         <h3 id="detail-title" class="detail-title"></h3>
@@ -302,6 +313,18 @@
                         <div class="form-group">
                             <label for="edit-due-date" class="form-label">Fecha límite</label>
                             <input id="edit-due-date" name="dueDate" type="date" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-tag" class="form-label">Categoría / Etiqueta</label>
+                            <select id="edit-tag" name="tag" class="form-control">
+                                <option value="">Sin etiqueta</option>
+                                <option value="Frontend">Frontend</option>
+                                <option value="Backend">Backend</option>
+                                <option value="DevOps">DevOps</option>
+                                <option value="Diseño">Diseño</option>
+                                <option value="Bugs">Bugs</option>
+                            </select>
                         </div>
 
                         <!-- Selector de Responsable en edición -->

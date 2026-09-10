@@ -77,11 +77,12 @@ export function openEditModal(task) {
     if (!modal) return;
     currentTask = task;
 
-    // Poblar campos de la vista de solo lectura
+    // 1. Poblar campos de texto en la vista de solo lectura
     document.getElementById('detail-title').textContent = task.title;
     document.getElementById('detail-description').textContent = task.description || 'Sin descripción añadida.';
     document.getElementById('detail-due-date').textContent = task.dueDate || 'Sin fecha límite';
     
+    // 2. Renderizar pastilla de prioridad
     const prio = document.getElementById('detail-priority');
     if (prio) {
         prio.textContent = task.priority;
@@ -89,16 +90,30 @@ export function openEditModal(task) {
     }
     document.getElementById('detail-status').textContent = statusLabels[task.status] || task.status;
 
-    // Renderizar avatar y nombre del responsable en el detalle
+    // 3. Renderizar pastilla de categoría / etiqueta
+    const tagEl = document.getElementById('detail-tag');
+    if (tagEl) {
+        if (task.tag) {
+            tagEl.textContent = task.tag;
+            tagEl.className = `tag-badge tag-${task.tag.toLowerCase()}`;
+            tagEl.style.display = '';
+        } else {
+            tagEl.textContent = '';
+            tagEl.className = 'tag-badge';
+            tagEl.style.display = 'none';
+        }
+    }
+
+    // 4. Renderizar avatar y nombre del responsable
     const assigned = getAppUsers().find(u => String(u.id) === String(task.assigneeId));
     document.getElementById('detail-assignee-wrap').innerHTML = assigned 
         ? `<div class="detail-assignee-box"><img src="${assigned.avatar}" alt="${assigned.name}" class="avatar-md" /><span class="assignee-name">${assigned.name}</span></div>`
         : '<span class="detail-text" style="padding: 0.35rem 0.6rem;">Sin asignar</span>';
 
-    // Rellenar formulario de edición automáticamente
+    // 5. Cargar los datos actuales en el formulario de edición (incluyendo 'tag')
     const form = document.getElementById('edit-task-form');
     if (form) {
-        ['id', 'title', 'description', 'status', 'priority', 'dueDate', 'assigneeId'].forEach(k => {
+        ['id', 'title', 'description', 'status', 'priority', 'dueDate', 'assigneeId', 'tag'].forEach(k => {
             if (form.elements[k]) form.elements[k].value = task[k] || '';
         });
     }
@@ -108,9 +123,9 @@ export function openEditModal(task) {
     modal.showModal();
 }
 
-/**
- * Conmuta entre el panel de lectura y el formulario editable.
- */
+
+//Conmuta entre el panel de lectura y el formulario editable.
+
 function toggleEditView(isEditing) {
     document.getElementById('task-detail-view')?.classList.toggle('hidden', isEditing);
     document.getElementById('edit-task-form')?.classList.toggle('hidden', !isEditing);
