@@ -42,12 +42,8 @@ export const dropzones = {
 export function updateCounters() {
     ['todo', 'doing', 'done'].forEach(status => {
         const count = document.querySelectorAll(`#tasks-${status} .task-card`).length;
-        ['counter', 'stat'].forEach(prefix => {
-            const el = document.getElementById(`${prefix}-${status}`);
-            if (el) el.textContent = count;
-        });
-        const mob = document.getElementById(`stat-${status}-mobile`);
-        if (mob) mob.textContent = count;
+        const columnCounter = document.getElementById(`counter-${status}`);
+        if (columnCounter) columnCounter.textContent = count;
     });
 }
 

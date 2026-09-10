@@ -134,6 +134,7 @@ button {
 .header-actions {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 1rem;
 }
 
@@ -262,31 +263,14 @@ button {
     .header-actions {
         gap: 0.5rem;
     }
-}
 
-/* En móviles (< 580px): convertir los botones en iconos compactos */
-@media (max-width: 580px) {
-    .header-container {
-        padding: 0 0.75rem;
-    }
-
-    .brand-name {
-        font-size: 1.05rem;
-    }
-
-    .header-actions {
-        gap: 0.35rem;
-    }
-
-    /* Oculta el texto dentro de los botones de acción dejando solo su icono */
+    /* Oculta los textos de los botones dejando únicamente el icono visible */
     .header-actions .btn span:not(.material-symbols-outlined) {
         display: none;
     }
 
-    /* Ajusta el botón a formato cuadrado táctil */
+    /* Ajusta el botón a formato compacto cuadrado */
     .header-actions .btn {
-        padding: 0.45rem;
-        width: 36px;
-        height: 36px;
+        padding: 0.5rem 0.6rem;
     }
 }
