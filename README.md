@@ -6,7 +6,6 @@
 ![HTML5](https://img.shields.io/badge/HTML5-Sem%C3%A1ntico-E34F26?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-Modular-1572B6?logo=css3&logoColor=white)
 ![Lighthouse](https://img.shields.io/badge/Lighthouse-100%2F100-00CC66?logo=lighthouse&logoColor=white)
-![Licencia](https://img.shields.io/badge/Licencia-MIT-blue.svg)
 
 **Aplicación web interactiva para la gestión visual de tareas bajo metodología Kanban, desarrollada íntegramente con JavaScript Vanilla modular y arquitectura CSS desacoplada.**
 
@@ -23,7 +22,7 @@
 3. [Características Principales](#-características-principales)
 4. [Stack Tecnológico](#-stack-tecnológico)
 5. [Estructura del Proyecto](#-estructura-del-proyecto)
-6. [Auditoría y Rendimiento (Lighthouse 100/100)](#-auditoría-y-rendimiento-lighthouse-100100)
+6. [Auditoría y Rendimiento (Lighthouse)](#-auditoría-y-rendimiento-lighthouse)
 7. [Evidencias de Funcionamiento](#-evidencias-de-funcionamiento)
 8. [Licencia](#-licencia)
 
@@ -51,23 +50,26 @@ Para clonar el proyecto, inicializar la API REST mock y ejecutar la aplicación 
 
 ### 2. Clonar el repositorio
 Abre la terminal en la carpeta donde desees alojar el proyecto y ejecuta:
-```bash
-git clone [https://github.com/Sazu97/Task-Web.git](https://github.com/Sazu97/Task-Web.git)
+~~~bash
+git clone https://github.com/Sazu97/Task-Web.git
 cd Task-Web
-```
+~~~
 
 ### 3. Iniciar el servidor mock (`json-server`)
 La persistencia de datos depende del archivo alojado en `data/db.json`. Inicia el servidor ejecutando:
-```bash
+~~~bash
 npx json-server --watch data/db.json --port 3000
-```
+~~~
 
-> **Alternativa (Instalación global):**
-> Si prefieres tener el comando disponible de forma permanente:
-> ```bash
+> **¿Por qué `npx`? (Arquitectura limpia sin `node_modules`):**  
+> Al tratarse de una arquitectura en JavaScript Vanilla con módulos ES6 nativos y sin empaquetadores, el comando `npx` ejecuta `json-server` directamente desde la memoria caché temporal de Node.js sin necesidad de instalar dependencias locales ni saturar el repositorio con una carpeta `node_modules`.
+
+> **Alternativa (Instalación global):**  
+> Si prefieres tener el comando disponible de forma permanente en tu sistema:
+> ~~~bash
 > npm install -g json-server
 > json-server --watch data/db.json --port 3000
-> ```
+> ~~~
 
 El servidor quedará a la escucha en el puerto `3000`, ofreciendo los siguientes endpoints:
 * **Tareas:** `http://localhost:3000/tasks` (`GET`, `POST`, `PATCH`, `DELETE`)
@@ -104,13 +106,18 @@ Mantén la terminal de `json-server` en ejecución en segundo plano y procede a 
 
 ## 📂 Estructura del Proyecto
 
-```text
-Tacks-web/
+~~~text
+Task-Web/
 ├── index.html              # Estructura principal y plantillas modales <dialog>
 ├── .gitignore              # Exclusiones de Git (node_modules, cachés, logs)
 ├── README.md               # Documentación y manual de puesta en marcha
 ├── data/
 │   └── db.json             # Base de datos local para json-server
+├── docs/                   # Recursos visuales y evidencias de auditoría
+│   ├── 100.png             # Captura de auditoría Lighthouse
+│   ├── C1.png              # Tablero principal en escritorio
+│   ├── C2.png              # Modal de detalle y edición
+│   └── C3.png              # Vista responsive en dispositivo móvil
 ├── src/
 │   └── css/
 │       ├── base.css        # Resets, tipografía, cabecera y estructura global
@@ -122,23 +129,36 @@ Tacks-web/
     ├── ui.js               # Renderizado del DOM, contadores, filtros y sanitización
     ├── modals.js           # Controladores de formularios y validación de modales
     └── dragDrop.js         # Inicialización de SortableJS y persistencia de arrastre
-```
+~~~
 
 ---
 
-## ⚡ Auditoría y Rendimiento (Lighthouse 100/100)
+## ⚡ Auditoría y Rendimiento (Lighthouse)
 
-La aplicación ha sido auditada exhaustivamente mediante Google Lighthouse, logrando la máxima puntuación en todas las áreas evaluadas:
-
-| Métrica | Puntuación | Estado |
-| :--- | :---: | :---: |
-| 🚀 **Rendimiento** | **100** | ✅ Óptimo |
-| ♿ **Accesibilidad** | **100** | ✅ Cumplimiento WCAG AA |
-| 🛡️ **Prácticas recomendadas** | **100** | ✅ Estándares modernos |
-| 🔎 **SEO** | **100** | ✅ Indexable |
+La aplicación ha sido auditada exhaustivamente mediante Google Lighthouse, alcanzando la máxima puntuación en escritorio y optimización para entornos móviles:
 
 <div align="center">
-| Filtros Combinados y Búsqueda | Adaptabilidad Móvil (Responsive) |
-| :---: | :---: |
-| ![Filtros](docs/filters-view.png) | ![Móvil](docs/mobile-view.png) |
 
+![Auditoría Lighthouse 100/100](docs/100.png)
+
+| Métrica | Desktop | Mobile | Estado |
+| :--- | :---: | :---: | :---: |
+| 🚀 **Rendimiento** | **100** | **98** | ✅ Óptimo |
+| ♿ **Accesibilidad** | **100** | **100** | ✅ Cumplimiento WCAG AA |
+| 🛡️ **Prácticas recomendadas** | **100** | **100** | ✅ Estándares modernos |
+| 🔎 **SEO** | **100** | **100** | ✅ Totalmente indexable |
+
+</div>
+
+---
+
+## 📸 Evidencias de Funcionamiento
+
+### Tablero Principal (Escritorio)
+![Tablero Kanban - Vista Escritorio](docs/C1.png)
+
+### Detalle de Tarea y Adaptabilidad Móvil
+<div align="center">
+  <img src="docs/C2.png" alt="Detalle de tarea, edición y comentarios" width="58%" />
+  <img src="docs/C3.png" alt="Vista móvil responsive con selector de columnas" width="38%" />
+</div>
