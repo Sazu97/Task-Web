@@ -14,6 +14,11 @@
       "name": "Rocío",
       "avatar": "https://api.dicebear.com/10.x/pixelbot/svg?seed=Roc%C3%ADo",
       "id": "hzAxBgnsfsw"
+    },
+    {
+      "name": "Jony",
+      "avatar": "https://api.dicebear.com/10.x/pixelbot/svg?seed=Jony",
+      "id": "OSjaiV5Urho"
     }
   ],
   "tasks": [
@@ -21,7 +26,7 @@
       "id": "1",
       "title": "Diseñar arquitectura del proyecto",
       "description": "Definir la estructura modular de directorios y el contrato de datos JSON.",
-      "status": "doing",
+      "status": "todo",
       "priority": "Alta",
       "tag": "Backend",
       "dueDate": "2026-09-15",
@@ -44,7 +49,7 @@
       "id": "2",
       "title": "Maquetar vista responsive",
       "description": "Ajustar diseño de rejilla y selector de columnas para resoluciones móviles.",
-      "status": "todo",
+      "status": "doing",
       "priority": "Media",
       "tag": "Frontend",
       "dueDate": "2026-09-18",
@@ -55,6 +60,11 @@
           "author": "Sara",
           "text": "Falta revisar el comportamiento de las pestañas en pantallas inferiores a 768px.",
           "date": "08/09/2026"
+        },
+        {
+          "author": "Rocío",
+          "text": "Hay que tener en cuenta también la resolución de las tablets.",
+          "date": "14/09/2026"
         }
       ]
     },
@@ -77,7 +87,13 @@
       "tag": "Backend",
       "dueDate": "2026-10-30",
       "assigneeId": "hzAxBgnsfsw",
-      "comments": [],
+      "comments": [
+        {
+          "author": "Sara",
+          "text": "Esto es un comentario de prueba.",
+          "date": "14/09/2026"
+        }
+      ],
       "id": "1Anlj123Wb0"
     },
     {
@@ -124,6 +140,6 @@
       "comments": [],
       "id": "F6MrX8Ioe6M"
     }
-  ]
-
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

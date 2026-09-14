@@ -209,6 +209,7 @@ export function initEditModal() {
     const commentForm = document.getElementById('add-comment-form');
     commentForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
+        e.stopPropagation();
         if (!currentTask) return;
 
         const author = document.getElementById('comment-author-input');
