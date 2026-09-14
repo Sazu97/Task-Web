@@ -104,6 +104,21 @@ select.form-control option {
     color: #ffffff;
 }
 
+/* Selector de fecha en blanco*/
+input[type="date"].form-control {
+    color-scheme: dark;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: brightness(0) invert(1);
+    opacity: 1;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    filter: brightness(0) invert(0.7) sepia(1) saturate(5) hue-rotate(185deg);
+}
+
 .textarea {
     resize: vertical;
 }
