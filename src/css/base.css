@@ -66,12 +66,23 @@ button {
 .brand-logo {
     width: 32px;
     height: 32px;
-    background-color: #007acc;
-    color: #ffffff;
+    background-color: #388bfd1a;
+    border: 1px solid #388bfd4d;
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #388bfd;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.brand-logo:hover {
+    background-color: #388bfd2e;
+    border-color: #388bfd;
+}
+
+.brand-logo .material-symbols-outlined {
+    font-size: 20px;
 }
 
 .brand-name {
