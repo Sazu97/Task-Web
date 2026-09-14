@@ -24,7 +24,6 @@
 5. [Estructura del Proyecto](#-estructura-del-proyecto)
 6. [Auditoría y Rendimiento (Lighthouse)](#-auditoría-y-rendimiento-lighthouse)
 7. [Evidencias de Funcionamiento](#-evidencias-de-funcionamiento)
-8. [Licencia](#-licencia)
 
 ---
 
@@ -154,11 +153,25 @@ La aplicación ha sido auditada exhaustivamente mediante Google Lighthouse, alca
 
 ## 📸 Evidencias de Funcionamiento
 
-### Tablero Principal (Escritorio)
+### 1. Tablero Principal (Escritorio)
+Visualización completa del flujo de trabajo con columnas por estado, etiquetas de prioridad, categorías técnicas y avatares de usuario:
+
 ![Tablero Kanban - Vista Escritorio](docs/C1.png)
 
-### Detalle de Tarea y Adaptabilidad Móvil
+---
+
+### 2. Detalle y Edición de Tarea
+Modal flotante con soporte para modificación de metadatos, selector de fecha nativo adaptado al tema oscuro y panel cronológico de comentarios:
+
 <div align="center">
-  <img src="docs/C2.png" alt="Detalle de tarea, edición y comentarios" width="58%" />
-  <img src="docs/C3.png" alt="Vista móvil responsive con selector de columnas" width="38%" />
+  <img src="docs/C2.png" alt="Modal de edición y comentarios" width="85%" />
+</div>
+
+---
+
+### 3. Adaptabilidad Móvil (Responsive)
+Diseño móvil fluido con navegación por pestañas para alternar entre columnas y barra colapsable de filtros:
+
+<div align="center">
+  <img src="docs/C3.png" alt="Vista móvil responsive" width="360px" />
 </div>
