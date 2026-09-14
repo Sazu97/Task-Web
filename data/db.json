@@ -31,12 +31,12 @@
           "id": "c-1",
           "author": "Dani",
           "text": "Comprobar compatibilidad de rutas relativas.",
-          "date": "08 sep"
+          "date": "08/09/2026"
         },
         {
           "author": "Sara",
-          "text": "Recuerda no sobrecargarlo",
-          "date": "9/9/2026"
+          "text": "Recuerda no sobrecargarlo.",
+          "date": "09/09/2026"
         }
       ]
     },
@@ -54,7 +54,7 @@
           "id": "c-2",
           "author": "Sara",
           "text": "Falta revisar el comportamiento de las pestañas en pantallas inferiores a 768px.",
-          "date": "08 sep"
+          "date": "08/09/2026"
         }
       ]
     },
@@ -83,14 +83,47 @@
     {
       "title": "Implementar compra",
       "description": "Añadir carrito, cálculo del precio del envío según CP y pasarela de pago.",
-      "status": "doing",
+      "status": "done",
       "priority": "Baja",
       "tag": "Frontend",
       "dueDate": "",
       "assigneeId": "2",
       "comments": [],
       "id": "PBjrlEutwnk"
+    },
+    {
+      "title": "Optimizar accesibilidad web (WCAG 2.1)",
+      "description": "Añadir atributos ARIA a botones interactivos y verificar los ratios de contraste en los desplegables de filtros.",
+      "status": "todo",
+      "priority": "Media",
+      "dueDate": "2026-10-31",
+      "tag": "Frontend",
+      "assigneeId": "1",
+      "comments": [],
+      "id": "B1E_04HTj_g"
+    },
+    {
+      "title": "Implementar validaciones en modales",
+      "description": "Controlar campos obligatorios, validar límites de caracteres y sanitizar texto antes de enviar peticiones a la API.",
+      "status": "doing",
+      "priority": "Alta",
+      "dueDate": "2026-09-27",
+      "tag": "Frontend",
+      "assigneeId": "2",
+      "comments": [],
+      "id": "MTlqGctsE-E"
+    },
+    {
+      "title": "Configurar pipeline de CI con GitHub Actions",
+      "description": "Crear un flujo de trabajo para validar la sintaxis de archivos JavaScript y comprobar el formato CSS en cada Pull Request hacia dev.",
+      "status": "doing",
+      "priority": "Baja",
+      "dueDate": "2026-10-18",
+      "tag": "DevOps",
+      "assigneeId": "hzAxBgnsfsw",
+      "comments": [],
+      "id": "F6MrX8Ioe6M"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
+
 }

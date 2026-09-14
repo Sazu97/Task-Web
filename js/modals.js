@@ -217,10 +217,13 @@ export function initEditModal() {
         if (submitBtn) submitBtn.disabled = true;
 
         try {
+            const now = new Date();
+            const formattedDate = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+
             const comments = [...(currentTask.comments || []), {
                 author: author.value.trim(),
                 text: text.value.trim(),
-                date: new Date().toLocaleDateString('es-ES')
+                date: formattedDate
             }];
 
             const updated = await apiUpdateTask(currentTask.id, { comments });
